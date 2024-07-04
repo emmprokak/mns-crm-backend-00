@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="CRMUser")
+@Table(name="CRMUser_ent")
 public class User {
     @Id
     @UuidGenerator

@@ -1,0 +1,46 @@
+package com.unipi.mns.mnscrm00.mapping;
+
+import com.unipi.mns.mnscrm00.entities.data.Account;
+import com.unipi.mns.mnscrm00.entities.data.Contact;
+
+public class ObjectMapper {
+
+    public static Account mapAccountFields(Account source, Account target){
+        Account result = target;
+
+        result.setActive(source.isActive());
+        result.setBillingAddress(source.getBillingAddress());
+        result.setClientRating(source.getClientRating());
+        result.setCompanyName(source.getCompanyName());
+        result.setDescription(source.getDescription());
+        result.setIndustry(source.getIndustry());
+        result.setRelatedLead(source.getRelatedLead());
+        result.setParent(source.getParent());
+        result.setRevenue(source.getRevenue());
+        result.setVat(source.getVat());
+        result.setWebsite(source.getWebsite());
+
+        return result;
+    }
+
+    public static Contact mapContactFields(Contact source, Contact target){
+        Contact result = target;
+
+        if(source.getBirthdate() != null){
+            result.setBirthdate(source.getBirthdate());
+        }
+
+        result.setActive(source.isActive());
+        result.setAccount(source.getAccount());
+        result.setEmail(source.getEmail());
+        result.setFirstName(source.getFirstName());
+        result.setLastName(source.getLastName());
+        result.setPhone(source.getPhone());
+        result.setDepartment(source.getDepartment());
+        result.setPrefix(source.getPrefix());
+        result.setMobile(source.getMobile());
+        result.setRole(source.getRole());
+
+        return result;
+    }
+}

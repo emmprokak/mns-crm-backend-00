@@ -6,7 +6,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.util.List;
 
 @Entity
-@Table(name="Lead")
+@Table(name="Lead_ent")
 public class Lead {
     @Id
     @UuidGenerator

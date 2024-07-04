@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="Case")
+@Table(name="Case_ent")
 public class Case {
     @Id
     @UuidGenerator

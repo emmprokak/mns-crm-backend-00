@@ -6,7 +6,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.util.Date;
 
 @Entity
-@Table(name="Task")
+@Table(name="Task_ent")
 public class Task {
     @Id
     @UuidGenerator

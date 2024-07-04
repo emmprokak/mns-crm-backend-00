@@ -1,63 +1,24 @@
-package com.unipi.mns.mnscrm00.entities.data;
+package com.unipi.mns.mnscrm00.dto.abstracts;
 
-import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
-import com.unipi.mns.mnscrm00.dto.completes.ContactDTOComplete;
-import com.unipi.mns.mnscrm00.dto.minimals.ContactDTOMinimal;
-import com.unipi.mns.mnscrm00.dto.simples.ContactDTOSimple;
-import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
-import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
-import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
+import com.unipi.mns.mnscrm00.entities.data.Account;
 
 import java.util.Date;
-import java.util.List;
 
-@Entity
-@Table(name="Contact_ent")
-public class Contact implements Sendable<ContactDTO>, DataEntity {
-    @Id
-    @UuidGenerator
+public abstract class ContactDTO implements EntityDTO{
     private String id;
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Case> cases;
-
-    @Column(name="first_name")
+    private String accountId;
     private String firstName;
-
-    @Column(name="last_name")
     private String lastName;
-
-    @Column(name="email")
     private String email;
-
-    @Column(name="phone")
     private String phone;
-
-    @Column(name="mobile")
     private String mobile;
-
-    @Column(name = "prefix")
     private String prefix;
-
-    @Column(name="is_active")
     private boolean isActive;
-
-    @Column(name="birthdate")
     private Date birthdate;
-
-    @Column(name="department")
     private String department;
-
-    @Column(name="role")
     private String role;
 
-    public Contact(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
-        this.account = account;
+    public ContactDTO(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
         this.birthdate = birthdate;
         this.department = department;
         this.email = email;
@@ -69,20 +30,22 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
         this.phone = phone;
         this.prefix = prefix;
         this.role = role;
+
+        if(account != null){
+            this.accountId = account.getId();
+        }
     }
 
-    public Contact() {}
+    public ContactDTO(){
 
-    public List<Case> getCases() {
-        return cases;
     }
 
-    public Account getAccount() {
-        return account;
+    public String getAccount() {
+        return accountId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccount(String accountId) {
+        this.accountId = accountId;
     }
 
     public Date getBirthdate() {
@@ -171,20 +134,5 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    @Override
-    public ContactDTO toDTOSimple() {
-        return new ContactDTOSimple(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
-    }
-
-    @Override
-    public ContactDTO toDTOComplete() {
-        return new ContactDTOComplete(cases, account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
-    }
-
-    @Override
-    public ContactDTO toDTOMinimal() {
-        return new ContactDTOMinimal(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
     }
 }

@@ -6,7 +6,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.util.Date;
 
 @Entity
-@Table(name="Voice_Call")
+@Table(name="Voice_Call_ent")
 public class VoiceCall {
     @Id
     @UuidGenerator

@@ -1,14 +1,13 @@
 package com.unipi.mns.mnscrm00.controllers;
 
+import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.services.AccountService;
+import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.services.concretes.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/account")
@@ -17,12 +16,17 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping("/{id}")
-    public Account getAccount(@PathVariable String id){
-       return accountService.getAccountById(id);
+    public AccountDTO getAccount(@PathVariable String id){
+       return accountService.getAccountByIdSimple(id);
+    }
+
+    @GetMapping("/{id}/complete")
+    public AccountDTO getAccountWithRels(@PathVariable String id){
+        return accountService.getAccountByIdComplete(id);
     }
 
     @PostMapping("/new")
-    public Account createAccount(@RequestBody Account account){
+    public AccountDTO createAccount(@RequestBody Account account){
         return accountService.insertAccount(account);
     }
 
@@ -39,6 +43,16 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public boolean deleteAccount(@PathVariable String id){
       return accountService.deleteAccountById(id);
+    }
+
+    @PostMapping("/{id}/add-contact")
+    public AccountDTO addContact(@PathVariable String id, @RequestBody Contact contact){
+        return accountService.addContactToAccount(id, contact);
+    }
+
+    @DeleteMapping("/{accountId}/remove-contact/{contactId}")
+    public AccountDTO removeContact(@PathVariable String accountId, @PathVariable String contactId){
+        return accountService.removeContactFromAccount(accountId, contactId);
     }
 
     /*

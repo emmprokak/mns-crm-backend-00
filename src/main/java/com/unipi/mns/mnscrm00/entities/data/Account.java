@@ -1,15 +1,22 @@
 package com.unipi.mns.mnscrm00.entities.data;
 
+import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
+import com.unipi.mns.mnscrm00.dto.completes.AccountDTOComplete;
+import com.unipi.mns.mnscrm00.dto.minimals.AccountDTOMinimal;
+import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="Account")
-public class Account {
+@Table(name="Account_ent")
+public class Account implements Sendable<AccountDTO>, DataEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -23,7 +30,7 @@ public class Account {
     private Lead relatedLead;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Account> children = new HashSet<>();
+    private List<Account> children = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     List<Contact> contacts;
@@ -52,19 +59,19 @@ public class Account {
     @Column(name="description")
     private String description;
 
-    @Column(name="type")
+    @Column(name="account_type")
     private String type;
 
     @Column(name="website")
     private String website;
 
     @Column(name="client_rating")
-    private String clientRating;
+    private int clientRating;
 
     @Column(name="vat")
     private String vat;
 
-    public Account(String billingAddress, String clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website) {
+    public Account(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website) {
         this.billingAddress = billingAddress;
         this.clientRating = clientRating;
         this.companyName = companyName;
@@ -82,6 +89,21 @@ public class Account {
 
     public Account() {}
 
+    @Override
+    public AccountDTO toDTOSimple() {
+        return new AccountDTOSimple(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+    }
+
+    @Override
+    public AccountDTO toDTOComplete() {
+        return new AccountDTOComplete(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, children, contacts, cases, calls);
+    }
+
+    @Override
+    public AccountDTO toDTOMinimal() {
+        return new AccountDTOMinimal(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+    }
+
     public List<VoiceCall> getCalls() {
         return calls;
     }
@@ -90,7 +112,7 @@ public class Account {
         return cases;
     }
 
-    public Set<Account> getChildren() {
+    public List<Account> getChildren() {
         return children;
     }
 
@@ -106,11 +128,11 @@ public class Account {
         this.billingAddress = billingAddress;
     }
 
-    public String getClientRating() {
+    public int getClientRating() {
         return clientRating;
     }
 
-    public void setClientRating(String clientRating) {
+    public void setClientRating(int clientRating) {
         this.clientRating = clientRating;
     }
 
