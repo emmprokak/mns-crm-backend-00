@@ -1,7 +1,6 @@
 package com.unipi.mns.mnscrm00.dto.completes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
-import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
@@ -23,8 +22,8 @@ public class AccountDTOComplete extends AccountDTOSimple {
 
     public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls){
         super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
-        this.children = ListConverter.convertAccountsToDTOList(accounts, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
-        this.contacts = ListConverter.convertContactsToDTOList(contacts, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
+        this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.cases = cases;
         this.calls = calls;
     }

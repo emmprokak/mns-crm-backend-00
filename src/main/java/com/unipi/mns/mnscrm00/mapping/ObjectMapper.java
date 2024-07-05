@@ -15,10 +15,12 @@ public class ObjectMapper {
         result.setDescription(source.getDescription());
         result.setIndustry(source.getIndustry());
         result.setRelatedLead(source.getRelatedLead());
-        result.setParent(source.getParent());
         result.setRevenue(source.getRevenue());
         result.setVat(source.getVat());
         result.setWebsite(source.getWebsite());
+
+        result.setParent(source.getParent());
+
 
         return result;
     }

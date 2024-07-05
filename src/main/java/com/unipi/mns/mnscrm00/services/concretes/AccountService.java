@@ -1,6 +1,5 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
-import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
@@ -33,7 +32,13 @@ public class AccountService implements EntityService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessageUtility.getEntityNotFoundBySpecifier(Constants.Entity.getDescription(Constants.Entity.ACCOUNT), "id"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         return accountOptional.get().toDTOSimple();
@@ -43,7 +48,13 @@ public class AccountService implements EntityService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessageUtility.getEntityNotFoundBySpecifier(Constants.Entity.getDescription(Constants.Entity.ACCOUNT), "id"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         return accountOptional.get().toDTOComplete();
@@ -57,17 +68,29 @@ public class AccountService implements EntityService {
         List<Account> accountList = accountRepository.findAll();
 
         if(accountList.size() <= 0){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Constants.CONSTANT_ERRORS.ENTITY_NOT_FOUND);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getListEntityNotFound(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
-        return ListConverter.convertAccountsToDTOList(accountList, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public AccountDTO updateAccount(String id, Account account){
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         Account accToUpdate = accountOptional.get();
@@ -80,7 +103,13 @@ public class AccountService implements EntityService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         accountRepository.delete(accountOptional.get());
@@ -92,8 +121,15 @@ public class AccountService implements EntityService {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
+
         Contact contactToInsert = contact;
         contactToInsert.setAccount(accountOptional.get());
         Contact insertedContact = contactRepository.save(contactToInsert);
@@ -109,17 +145,36 @@ public class AccountService implements EntityService {
         Optional<Account> accountOptional = accountRepository.findById(accountId);
 
         if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
+
         }
 
         Optional<Contact> contactOptional = contactRepository.findById(contactId);
 
         if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         if(!accountOptional.get().getContacts().contains(contactOptional.get())){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact is not related to Account");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getRelationshipNotFound(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Entity.CONTACT
+                    )
+            );
         }
 
         accountOptional.get().getContacts().remove(contactOptional.get());

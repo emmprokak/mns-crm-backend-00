@@ -1,6 +1,6 @@
 package com.unipi.mns.mnscrm00.utilities;
 
-import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
+import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.EntityDTO;
@@ -18,13 +18,13 @@ public class ListConverter {
         List<AccountDTO> dtos = new ArrayList<>();
 
         switch(conversionType){
-            case ConstantDTOs.CONVERT_TO_DTO_MINIMAL:
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
                 accounts.forEach(acc -> dtos.add(acc.toDTOMinimal()));
                 break;
-            case ConstantDTOs.CONVERT_TO_DTO_SIMPLE:
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
                 accounts.forEach(acc -> dtos.add(acc.toDTOSimple()));
                 break;
-            case ConstantDTOs.CONVERT_TO_DTO_COMPLETE:
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
                 accounts.forEach(acc -> dtos.add(acc.toDTOComplete()));
                 break;
             default:
@@ -38,13 +38,13 @@ public class ListConverter {
         List<ContactDTO> dtos = new ArrayList<>();
 
         switch(conversionType){
-            case ConstantDTOs.CONVERT_TO_DTO_MINIMAL:
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
                 contacts.forEach(acc -> dtos.add(acc.toDTOMinimal()));
                 break;
-            case ConstantDTOs.CONVERT_TO_DTO_SIMPLE:
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
                 contacts.forEach(acc -> dtos.add(acc.toDTOSimple()));
                 break;
-            case ConstantDTOs.CONVERT_TO_DTO_COMPLETE:
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
                 contacts.forEach(acc -> dtos.add(acc.toDTOComplete()));
                 break;
             default:

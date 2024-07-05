@@ -1,7 +1,6 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
-import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
@@ -27,7 +26,13 @@ public class ContactService implements EntityService {
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessageUtility.getEntityNotFoundBySpecifier(Constants.Entity.getDescription(Constants.Entity.ACCOUNT), "id"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         return contactOptional.get().toDTOSimple();
@@ -37,7 +42,13 @@ public class ContactService implements EntityService {
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ErrorMessageUtility.getEntityNotFoundBySpecifier(Constants.Entity.getDescription(Constants.Entity.ACCOUNT), "id"));
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         return contactOptional.get().toDTOComplete();
@@ -55,17 +66,29 @@ public class ContactService implements EntityService {
         List<Contact> contactList = contactRepository.findAll();
 
         if(contactList.size() <= 0){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Constants.CONSTANT_ERRORS.ENTITY_NOT_FOUND);
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
-        return ListConverter.convertContactsToDTOList(contactList, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertContactsToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public ContactDTO updateContact(String id, Contact contact){
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         Contact contactToUpdate = contactOptional.get();
@@ -78,7 +101,13 @@ public class ContactService implements EntityService {
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Doctor not found");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
         }
 
         contactRepository.delete(contactOptional.get());
