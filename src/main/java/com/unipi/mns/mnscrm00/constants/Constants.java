@@ -1,5 +1,6 @@
 package com.unipi.mns.mnscrm00.constants;
 
+import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.constants.error.ConstantErrors;
 import org.springframework.http.HttpStatus;
 
@@ -8,6 +9,7 @@ import java.util.Map;
 
 public class Constants {
     public static ConstantErrors CONSTANT_ERRORS;
+    public static ConstantDTOs CONSTANT_DTOs;
 
     public enum Entity{
         ACCOUNT("Account"),
@@ -32,19 +34,6 @@ public class Constants {
         }
     }
 
-    public enum Specifier{
-        ID("id");
-
-        private final String message;
-
-        Specifier(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
 
 
 }

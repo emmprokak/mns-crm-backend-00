@@ -1,11 +1,13 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
+import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,17 +51,17 @@ public class ContactService implements EntityService {
         return contactRepository.save(contactToInsert).toDTOSimple();
     }
 
-    public List<Contact> getAllContacts(){
+    public List<ContactDTO> getAllContacts(){
         List<Contact> contactList = contactRepository.findAll();
 
         if(contactList.size() <= 0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Constants.CONSTANT_ERRORS.ENTITY_NOT_FOUND);
         }
 
-        return contactList;
+        return ListConverter.convertContactsToDTOList(contactList, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
     }
 
-    public Contact updateContact(String id, Contact contact){
+    public ContactDTO updateContact(String id, Contact contact){
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
@@ -69,7 +71,7 @@ public class ContactService implements EntityService {
         Contact contactToUpdate = contactOptional.get();
         contactToUpdate = ObjectMapper.mapContactFields(contact, contactToUpdate);
 
-        return contactRepository.save(contactToUpdate);
+        return contactRepository.save(contactToUpdate).toDTOSimple();
     }
 
     public boolean deleteContactById(String id){

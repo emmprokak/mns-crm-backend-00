@@ -8,7 +8,7 @@ import com.unipi.mns.mnscrm00.entities.data.Account;
 import java.util.Date;
 
 public class ContactDTOSimple extends ContactDTOMinimal {
-    private Account parent;
+    private AccountDTO parent;
 
     public ContactDTOSimple() {
         super();
@@ -17,8 +17,16 @@ public class ContactDTOSimple extends ContactDTOMinimal {
     public ContactDTOSimple(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
         super(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
 
-        if(parent != null){
-            this.parent = account;
+        if(account != null){
+            this.parent = account.toDTOSimple();
         }
+    }
+
+    public AccountDTO getParent() {
+        return parent;
+    }
+
+    public void setParent(AccountDTO parent) {
+        this.parent = parent;
     }
 }

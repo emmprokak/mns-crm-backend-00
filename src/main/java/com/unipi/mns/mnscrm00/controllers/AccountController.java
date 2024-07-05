@@ -31,12 +31,12 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public List<Account> getAccounts(){
+    public List<AccountDTO> getAccounts(){
         return accountService.getAllAccounts();
     }
 
     @PutMapping("/{id}")
-    public Account updateAccount(@PathVariable String id, @RequestBody Account account){
+    public AccountDTO updateAccount(@PathVariable String id, @RequestBody Account account){
         return accountService.updateAccount(id, account);
     }
 

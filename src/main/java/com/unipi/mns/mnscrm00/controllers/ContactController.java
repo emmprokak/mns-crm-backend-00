@@ -31,13 +31,13 @@ public class ContactController {
     }
 
     @GetMapping("/all")
-    public List<Contact> getContacts(){
+    public List<ContactDTO> getContacts(){
         return contactService.getAllContacts();
     }
 
     @PutMapping("/{id}")
     public ContactDTO updateContact(@PathVariable String id, @RequestBody Contact contact){
-        return contactService.updateContact(id, contact).toDTOSimple();
+        return contactService.updateContact(id, contact);
     }
 
     @DeleteMapping("/{id}")

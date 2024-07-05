@@ -1,5 +1,6 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
+import com.unipi.mns.mnscrm00.constants.dto.ConstantDTOs;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
@@ -8,6 +9,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,17 +53,17 @@ public class AccountService implements EntityService {
         return accountRepository.save(account).toDTOSimple();
     }
 
-    public List<Account> getAllAccounts(){
+    public List<AccountDTO> getAllAccounts(){
         List<Account> accountList = accountRepository.findAll();
 
         if(accountList.size() <= 0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Constants.CONSTANT_ERRORS.ENTITY_NOT_FOUND);
         }
 
-        return accountList;
+        return ListConverter.convertAccountsToDTOList(accountList, ConstantDTOs.CONVERT_TO_DTO_MINIMAL);
     }
 
-    public Account updateAccount(String id, Account account){
+    public AccountDTO updateAccount(String id, Account account){
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
@@ -71,7 +73,7 @@ public class AccountService implements EntityService {
         Account accToUpdate = accountOptional.get();
         accToUpdate = ObjectMapper.mapAccountFields(account, accToUpdate);
 
-        return accountRepository.save(accToUpdate);
+        return accountRepository.save(accToUpdate).toDTOSimple();
     }
 
     public boolean deleteAccountById(String id){
