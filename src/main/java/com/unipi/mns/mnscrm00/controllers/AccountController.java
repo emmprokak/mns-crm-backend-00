@@ -1,7 +1,6 @@
 package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
-import com.unipi.mns.mnscrm00.dto.requests.AccountDTORequest;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.services.concretes.AccountService;
