@@ -4,9 +4,11 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.EntityDTO;
+import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.exceptions.ListConversionException;
 
 import java.util.ArrayList;
@@ -39,13 +41,33 @@ public class ListConverter {
 
         switch(conversionType){
             case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                contacts.forEach(acc -> dtos.add(acc.toDTOMinimal()));
+                contacts.forEach(con -> dtos.add(con.toDTOMinimal()));
                 break;
             case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                contacts.forEach(acc -> dtos.add(acc.toDTOSimple()));
+                contacts.forEach(con -> dtos.add(con.toDTOSimple()));
                 break;
             case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                contacts.forEach(acc -> dtos.add(acc.toDTOComplete()));
+                contacts.forEach(con -> dtos.add(con.toDTOComplete()));
+                break;
+            default:
+                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
+        }
+
+        return dtos;
+    }
+
+    public static List<LeadDTO> convertLeadsToDTOList(List<Lead> leads, int conversionType){
+        List<LeadDTO> dtos = new ArrayList<>();
+
+        switch(conversionType){
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
+                leads.forEach(lead -> dtos.add(lead.toDTOMinimal()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
+                leads.forEach(lead -> dtos.add(lead.toDTOSimple()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
+                leads.forEach(lead -> dtos.add(lead.toDTOComplete()));
                 break;
             default:
                 //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");

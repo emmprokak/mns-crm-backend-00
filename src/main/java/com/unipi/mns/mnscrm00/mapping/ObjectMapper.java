@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.mapping;
 
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.entities.data.Lead;
 
 public class ObjectMapper {
 
@@ -42,6 +43,24 @@ public class ObjectMapper {
         result.setPrefix(source.getPrefix());
         result.setMobile(source.getMobile());
         result.setRole(source.getRole());
+
+        return result;
+    }
+
+
+    public static Lead mapLeadFields(Lead source, Lead target){
+        Lead result = target;
+
+        result.setCompanyAddress(source.getCompanyAddress());
+        result.setCompanyIndustry(source.getCompanyIndustry());
+        result.setCompanyName(source.getCompanyName());
+        result.setContactEmail(source.getContactEmail());
+        result.setContactMobile(source.getContactMobile());
+        result.setContactPhone(source.getContactPhone());
+        result.setContactRole(source.getContactRole());
+        result.setContactPrefix(source.getContactPrefix());
+        result.setStatus(source.getStatus());
+        result.setContactPerson(source.getContactPerson());
 
         return result;
     }

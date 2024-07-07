@@ -1,60 +1,31 @@
-package com.unipi.mns.mnscrm00.entities.data;
+package com.unipi.mns.mnscrm00.dto.abstracts;
 
-import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
-import com.unipi.mns.mnscrm00.dto.completes.LeadDTOComplete;
-import com.unipi.mns.mnscrm00.dto.minimals.LeadDTOMinimal;
-import com.unipi.mns.mnscrm00.dto.simples.LeadDTOSimple;
-import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
-import jakarta.persistence.*;
+import com.unipi.mns.mnscrm00.entities.data.Note;
+import com.unipi.mns.mnscrm00.entities.data.Task;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
-@Table(name="Lead_ent")
-public class Lead implements Sendable<LeadDTO>{
-    @Id
-    @UuidGenerator
+public abstract class LeadDTO implements EntityDTO {
+
     private String id;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Task> tasks;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Note> notes;
-
-    @Column(name="company_name")
     private String companyName;
-
-    @Column(name="contact_person")
     private String contactPerson;
-
-    @Column(name="contact_prefix")
     private String contactPrefix;
-
-    @Column(name="company_address")
     private String companyAddress;
-
-    @Column(name="contact_role")
     private String contactRole;
-
-    @Column(name="contact_email")
     private String contactEmail;
-
-    @Column(name="contact_mobile")
     private String contactMobile;
-
-    @Column(name="contact_phone")
     private String contactPhone;
-
-    @Column(name="company_industry")
     private String companyIndustry;
-
-    @Column(name="status")
     private String status;
 
-    public Lead(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status) {
+    public LeadDTO(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status) {
         this.companyAddress = companyAddress;
         this.companyIndustry = companyIndustry;
         this.companyName = companyName;
@@ -68,29 +39,8 @@ public class Lead implements Sendable<LeadDTO>{
         this.status = status;
     }
 
-    public Lead() {}
+    public LeadDTO() {
 
-    @Override
-    public LeadDTO toDTOSimple() {
-        return new LeadDTOSimple(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status);
-    }
-
-    @Override
-    public LeadDTO toDTOComplete() {
-        return new LeadDTOComplete(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, notes, tasks);
-    }
-
-    @Override
-    public LeadDTO toDTOMinimal() {
-        return new LeadDTOMinimal(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status);
-    }
-
-    public List<Note> getNotes() {
-        return notes;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
     }
 
     public String getCompanyAddress() {
@@ -180,6 +130,4 @@ public class Lead implements Sendable<LeadDTO>{
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 }
