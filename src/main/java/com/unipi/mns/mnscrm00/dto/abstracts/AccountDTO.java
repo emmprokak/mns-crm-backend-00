@@ -7,7 +7,7 @@ public abstract class AccountDTO implements EntityDTO{
     private String id;
     private String parentId;
     private String companyName;
-    private Lead relatedLead;
+    private String leadId;
     private boolean isActive;
     private String industry;
     private double revenue;
@@ -26,7 +26,6 @@ public abstract class AccountDTO implements EntityDTO{
         this.id = id;
         this.industry = industry;
         this.isActive = isActive;
-        this.relatedLead = relatedLead;
         this.revenue = revenue;
         this.type = type;
         this.vat = vat;
@@ -34,6 +33,10 @@ public abstract class AccountDTO implements EntityDTO{
 
         if(parent != null){
             this.parentId = parent.getId();
+        }
+
+        if(relatedLead != null){
+            this.leadId = relatedLead.getId();
         }
 
     }
@@ -104,12 +107,20 @@ public abstract class AccountDTO implements EntityDTO{
         this.parentId = parentId;
     }
 
-    public Lead getRelatedLead() {
-        return relatedLead;
+    public String getLeadId() {
+        return leadId;
     }
 
-    public void setRelatedLead(Lead relatedLead) {
-        this.relatedLead = relatedLead;
+    public void setLeadId(String leadId) {
+        this.leadId = leadId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public double getRevenue() {

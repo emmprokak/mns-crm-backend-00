@@ -61,7 +61,9 @@ public class AccountService implements EntityService {
     }
 
     public AccountDTO insertAccount(Account account){
-        return accountRepository.save(account).toDTOSimple();
+        Account acc = new Account();
+        acc = ObjectMapper.mapAccountFields(account, acc);
+        return accountRepository.save(acc).toDTOSimple();
     }
 
     public List<AccountDTO> getAllAccounts(){
@@ -139,6 +141,39 @@ public class AccountService implements EntityService {
         accountRepository.save(accToUpdate);
 
         return accToUpdate.toDTOComplete();
+    }
+
+    public AccountDTO relateContactToAccount(String accountId, String contactId){
+        Optional<Account> accountOptional = accountRepository.findById(accountId);
+
+        if(!accountOptional.isPresent()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
+
+        }
+
+        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+
+        if(!contactOptional.isPresent()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        accountOptional.get().getContacts().add(contactOptional.get());
+        contactOptional.get().setAccount(accountOptional.get());
+
+        contactRepository.save(contactOptional.get());
+        return accountRepository.save(accountOptional.get()).toDTOComplete();
     }
 
     public AccountDTO removeContactFromAccount(String accountId, String contactId){

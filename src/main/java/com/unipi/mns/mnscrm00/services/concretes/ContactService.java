@@ -1,8 +1,10 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
+import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
+import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
@@ -21,6 +23,8 @@ public class ContactService implements EntityService {
 
     @Autowired
     private ContactRepository contactRepository;
+    @Autowired
+    private AccountRepository accountRepository;
 
     public ContactDTO getContactByIdSimple(String id){
         Optional<Contact> contactOptional = contactRepository.findById(id);
@@ -108,6 +112,23 @@ public class ContactService implements EntityService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(contactOptional.get().getAccount() != null){
+            Optional<Account> accountOptional = accountRepository.findById(contactOptional.get().getAccount().getId());
+
+            if(!accountOptional.isPresent()){
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.ACCOUNT,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+            accountOptional.get().getContacts().remove(contactOptional.get());
+            accountRepository.save(accountOptional.get());
         }
 
         contactRepository.delete(contactOptional.get());

@@ -1,6 +1,7 @@
 package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
+import com.unipi.mns.mnscrm00.dto.requests.AccountDTORequest;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.services.concretes.AccountService;
@@ -48,6 +49,11 @@ public class AccountController {
     @PostMapping("/{id}/add-contact")
     public AccountDTO addContact(@PathVariable String id, @RequestBody Contact contact){
         return accountService.addContactToAccount(id, contact);
+    }
+
+    @PostMapping("/{id}/relate-contact/{contactId}")
+    public AccountDTO addContact(@PathVariable String id, @PathVariable String contactId){
+        return accountService.relateContactToAccount(id, contactId);
     }
 
     @DeleteMapping("/{accountId}/remove-contact/{contactId}")

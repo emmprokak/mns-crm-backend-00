@@ -8,6 +8,8 @@ public class AccountDTOSimple extends AccountDTO {
 
     private AccountDTO parent;
 
+    //TODO: add lead DTO
+
     public AccountDTOSimple(){
         super();
     }
