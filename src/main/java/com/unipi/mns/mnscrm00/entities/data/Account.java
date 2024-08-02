@@ -1,5 +1,7 @@
 package com.unipi.mns.mnscrm00.entities.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.completes.AccountDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.AccountDTOMinimal;
@@ -7,8 +9,11 @@ import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -23,11 +28,18 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @JsonBackReference
     private Account parent;
 
     @OneToOne
     @JoinColumn(name = "lead_id")
     private Lead relatedLead;
+
+    @Column(name="parent_id_txt")
+    private String parentId;
+
+    @Column(name="lead_id_txt")
+    private String relatedLeadId;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> children = new ArrayList<>();
@@ -71,6 +83,14 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     @Column(name="vat")
     private String vat;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
+
     public Account(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website) {
         this.billingAddress = billingAddress;
         this.clientRating = clientRating;
@@ -87,21 +107,27 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
         this.website = website;
     }
 
+    public Account(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, String leadId, String parentId){
+        this(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+        this.parentId = parentId;
+        this.relatedLeadId = leadId;
+    }
+
     public Account() {}
 
     @Override
     public AccountDTO toDTOSimple() {
-        return new AccountDTOSimple(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+        return new AccountDTOSimple(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
     }
 
     @Override
     public AccountDTO toDTOComplete() {
-        return new AccountDTOComplete(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, children, contacts, cases, calls);
+        return new AccountDTOComplete(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, children, contacts, cases, calls, created, modified);
     }
 
     @Override
     public AccountDTO toDTOMinimal() {
-        return new AccountDTOMinimal(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+        return new AccountDTOMinimal(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
     }
 
     public List<VoiceCall> getCalls() {
@@ -118,6 +144,22 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
 
     public List<Contact> getContacts() {
         return contacts;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getRelatedLeadId() {
+        return relatedLeadId;
+    }
+
+    public void setRelatedLeadId(String relatedLeadId) {
+        this.relatedLeadId = relatedLeadId;
     }
 
     public String getBillingAddress() {

@@ -39,7 +39,7 @@ public class ContactService implements EntityService {
             );
         }
 
-        return contactOptional.get().toDTOSimple();
+        return contactOptional.get().toDTOMinimal();
     }
 
     public ContactDTO getContactByIdComplete(String id){

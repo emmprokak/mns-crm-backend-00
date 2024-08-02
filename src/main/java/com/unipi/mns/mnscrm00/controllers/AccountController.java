@@ -31,7 +31,12 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public List<AccountDTO> getAccounts(){
+    public List<AccountDTO> getAccounts(@RequestParam(required = false) Integer limit,
+                                        @RequestParam(required = false) String orderByField,
+                                        @RequestParam(required = false) String orderType){
+        if(limit != null && orderType != null && orderByField != null){
+            return accountService.getAllAccountsWithFilters(limit, orderByField, orderType);
+        }
         return accountService.getAllAccounts();
     }
 

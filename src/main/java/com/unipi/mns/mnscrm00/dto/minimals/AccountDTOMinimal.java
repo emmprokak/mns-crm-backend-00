@@ -6,13 +6,15 @@ import com.unipi.mns.mnscrm00.dto.completes.AccountDTOComplete;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 
+import java.time.LocalDateTime;
+
 public class AccountDTOMinimal extends AccountDTO implements EntityDTO {
 
     public AccountDTOMinimal(){
         super();
     }
 
-    public AccountDTOMinimal(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website) {
-        super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+    public AccountDTOMinimal(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, LocalDateTime created, LocalDateTime modified) {
+        super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
     }
 }

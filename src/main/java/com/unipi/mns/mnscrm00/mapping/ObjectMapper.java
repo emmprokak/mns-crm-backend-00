@@ -19,9 +19,7 @@ public class ObjectMapper {
         result.setRevenue(source.getRevenue());
         result.setVat(source.getVat());
         result.setWebsite(source.getWebsite());
-
-        result.setParent(source.getParent());
-
+        result.setType(source.getType());
 
         return result;
     }

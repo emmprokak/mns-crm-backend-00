@@ -3,6 +3,8 @@ package com.unipi.mns.mnscrm00.dto.abstracts;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 
+import java.time.LocalDateTime;
+
 public abstract class AccountDTO implements EntityDTO{
     private String id;
     private String parentId;
@@ -17,8 +19,10 @@ public abstract class AccountDTO implements EntityDTO{
     private String website;
     private int clientRating;
     private String vat;
+    private LocalDateTime created;
+    private LocalDateTime modified;
 
-    public AccountDTO(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website) {
+    public AccountDTO(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, LocalDateTime created, LocalDateTime modified) {
         this.billingAddress = billingAddress;
         this.clientRating = clientRating;
         this.companyName = companyName;
@@ -31,6 +35,9 @@ public abstract class AccountDTO implements EntityDTO{
         this.vat = vat;
         this.website = website;
 
+        this.created = created;
+        this.modified = modified;
+
         if(parent != null){
             this.parentId = parent.getId();
         }
@@ -42,6 +49,22 @@ public abstract class AccountDTO implements EntityDTO{
     }
 
     public AccountDTO() {}
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
 
     public String getBillingAddress() {
         return billingAddress;
@@ -97,14 +120,6 @@ public abstract class AccountDTO implements EntityDTO{
 
     public void setActive(boolean active) {
         isActive = active;
-    }
-
-    public String getParent() {
-        return parentId;
-    }
-
-    public void setParent(String parentId) {
-        this.parentId = parentId;
     }
 
     public String getLeadId() {

@@ -8,6 +8,7 @@ import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.exceptions.ListConversionException;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class AccountDTOComplete extends AccountDTOSimple {
@@ -20,8 +21,8 @@ public class AccountDTOComplete extends AccountDTOSimple {
         super();
     }
 
-    public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls){
-        super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website);
+    public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls, LocalDateTime created, LocalDateTime modified){
+        super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
         this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.cases = cases;

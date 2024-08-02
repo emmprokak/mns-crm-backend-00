@@ -2,15 +2,21 @@ package com.unipi.mns.mnscrm00.services.concretes;
 
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
+import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
+import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService implements EntityService {
@@ -27,6 +34,9 @@ public class AccountService implements EntityService {
     private ContactRepository contactRepository;
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private RelationshipMapper relationshipMapper;
 
     public AccountDTO getAccountByIdSimple(String id){
         Optional<Account> accountOptional = accountRepository.findById(id);
@@ -82,6 +92,19 @@ public class AccountService implements EntityService {
         return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
+    public List<AccountDTO> getAllAccountsWithFilters(int limit, String orderByField, String orderType){
+        Sort sort = Sort.by(Sort.Direction.fromString(orderType), orderByField);
+        Pageable pageable = PageRequest.of(0, limit, sort);
+        Page<Account> accountPage = accountRepository.findAll(pageable);
+
+        return accountPage.stream()
+                .map(account -> {
+                    return account.toDTOSimple();
+                })
+                .collect(Collectors.toList());
+    }
+
+
     public AccountDTO updateAccount(String id, Account account){
         Optional<Account> accountOptional = accountRepository.findById(id);
 
@@ -97,6 +120,7 @@ public class AccountService implements EntityService {
 
         Account accToUpdate = accountOptional.get();
         accToUpdate = ObjectMapper.mapAccountFields(account, accToUpdate);
+        accToUpdate = relationshipMapper.mapAccountParents(account, accToUpdate);
 
         return accountRepository.save(accToUpdate).toDTOSimple();
     }
