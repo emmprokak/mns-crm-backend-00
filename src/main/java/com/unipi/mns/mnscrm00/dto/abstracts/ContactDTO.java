@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.dto.abstracts;
 
 import com.unipi.mns.mnscrm00.entities.data.Account;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public abstract class ContactDTO implements EntityDTO{
@@ -17,8 +18,10 @@ public abstract class ContactDTO implements EntityDTO{
     private Date birthdate;
     private String department;
     private String role;
+    private LocalDateTime created;
+    private LocalDateTime modified;
 
-    public ContactDTO(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
+    public ContactDTO(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role, LocalDateTime created, LocalDateTime modified) {
         this.birthdate = birthdate;
         this.department = department;
         this.email = email;
@@ -30,6 +33,8 @@ public abstract class ContactDTO implements EntityDTO{
         this.phone = phone;
         this.prefix = prefix;
         this.role = role;
+        this.created = created;
+        this.modified = modified;
 
         if(account != null){
             this.accountId = account.getId();
@@ -40,12 +45,28 @@ public abstract class ContactDTO implements EntityDTO{
 
     }
 
-    public String getAccount() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccount(String accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 
     public Date getBirthdate() {

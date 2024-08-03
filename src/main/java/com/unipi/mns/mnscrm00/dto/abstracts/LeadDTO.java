@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public abstract class LeadDTO implements EntityDTO {
@@ -24,8 +25,10 @@ public abstract class LeadDTO implements EntityDTO {
     private String contactPhone;
     private String companyIndustry;
     private String status;
+    private LocalDateTime created;
+    private LocalDateTime modified;
 
-    public LeadDTO(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status) {
+    public LeadDTO(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status, LocalDateTime created, LocalDateTime modified) {
         this.companyAddress = companyAddress;
         this.companyIndustry = companyIndustry;
         this.companyName = companyName;
@@ -37,10 +40,28 @@ public abstract class LeadDTO implements EntityDTO {
         this.contactRole = contactRole;
         this.id = id;
         this.status = status;
+        this.created = created;
+        this.modified = modified;
     }
 
     public LeadDTO() {
 
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 
     public String getCompanyAddress() {

@@ -5,6 +5,7 @@ import com.unipi.mns.mnscrm00.dto.simples.LeadDTOSimple;
 import com.unipi.mns.mnscrm00.entities.data.Note;
 import com.unipi.mns.mnscrm00.entities.data.Task;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class LeadDTOComplete extends LeadDTOSimple {
@@ -14,8 +15,8 @@ public class LeadDTOComplete extends LeadDTOSimple {
 
     // TODO: convert to DTO
 
-    public LeadDTOComplete(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status, List<Note> notes, List<Task> tasks) {
-        super(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status);
+    public LeadDTOComplete(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status, List<Note> notes, List<Task> tasks, LocalDateTime created, LocalDateTime modified) {
+        super(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
         this.notes = notes;
         this.tasks = tasks;
     }

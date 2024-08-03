@@ -5,6 +5,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.minimals.ContactDTOMinimal;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class ContactDTOSimple extends ContactDTOMinimal {
@@ -14,8 +15,8 @@ public class ContactDTOSimple extends ContactDTOMinimal {
         super();
     }
 
-    public ContactDTOSimple(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
-        super(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
+    public ContactDTOSimple(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role, LocalDateTime created, LocalDateTime modified) {
+        super(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
 
         if(account != null){
             this.parent = account.toDTOSimple();

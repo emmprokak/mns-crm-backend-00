@@ -6,9 +6,12 @@ import com.unipi.mns.mnscrm00.dto.minimals.LeadDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.LeadDTOSimple;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -54,7 +57,14 @@ public class Lead implements Sendable<LeadDTO>{
     @Column(name="status")
     private String status;
 
-    public Lead(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status) {
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
+    public Lead(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status, LocalDateTime created, LocalDateTime modified) {
         this.companyAddress = companyAddress;
         this.companyIndustry = companyIndustry;
         this.companyName = companyName;
@@ -66,23 +76,25 @@ public class Lead implements Sendable<LeadDTO>{
         this.contactRole = contactRole;
         this.id = id;
         this.status = status;
+        this.created = created;
+        this.modified = modified;
     }
 
     public Lead() {}
 
     @Override
     public LeadDTO toDTOSimple() {
-        return new LeadDTOSimple(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status);
+        return new LeadDTOSimple(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
     }
 
     @Override
     public LeadDTO toDTOComplete() {
-        return new LeadDTOComplete(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, notes, tasks);
+        return new LeadDTOComplete(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, notes, tasks, created, modified);
     }
 
     @Override
     public LeadDTO toDTOMinimal() {
-        return new LeadDTOMinimal(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status);
+        return new LeadDTOMinimal(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
     }
 
     public List<Note> getNotes() {
@@ -91,6 +103,22 @@ public class Lead implements Sendable<LeadDTO>{
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public String getCompanyAddress() {

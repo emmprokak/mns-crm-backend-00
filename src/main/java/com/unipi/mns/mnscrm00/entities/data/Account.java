@@ -44,14 +44,17 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> children = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Contact> contacts;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     List<Case> cases;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     List<VoiceCall> calls;
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    List<Opportunity> opportunities;
 
     @Column(name="company_name")
     private String companyName;
@@ -122,12 +125,16 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
 
     @Override
     public AccountDTO toDTOComplete() {
-        return new AccountDTOComplete(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, children, contacts, cases, calls, created, modified);
+        return new AccountDTOComplete(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, children, contacts, cases, calls, created, modified, opportunities);
     }
 
     @Override
     public AccountDTO toDTOMinimal() {
         return new AccountDTOMinimal(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
+    }
+
+    public List<Opportunity> getOpportunities() {
+        return opportunities;
     }
 
     public List<VoiceCall> getCalls() {

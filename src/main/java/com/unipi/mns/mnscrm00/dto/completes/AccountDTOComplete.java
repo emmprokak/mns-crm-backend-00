@@ -16,17 +16,27 @@ public class AccountDTOComplete extends AccountDTOSimple {
     private List<ContactDTO> contacts;
     private List<Case> cases;
     private List<VoiceCall> calls;
+    private List<Opportunity> opportunities;
 
     public AccountDTOComplete(){
         super();
     }
 
-    public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls, LocalDateTime created, LocalDateTime modified){
+    public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls, LocalDateTime created, LocalDateTime modified, List<Opportunity> opportunities){
         super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
         this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.cases = cases;
+        this.cases = cases; // TODO: convert all to minimal
         this.calls = calls;
+        this.opportunities = opportunities;
+    }
+
+    public List<Opportunity> getOpportunities() {
+        return opportunities;
+    }
+
+    public void setOpportunities(List<Opportunity> opportunities) {
+        this.opportunities = opportunities;
     }
 
     public List<VoiceCall> getCalls() {

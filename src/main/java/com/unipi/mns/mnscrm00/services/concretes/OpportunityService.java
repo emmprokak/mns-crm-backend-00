@@ -2,10 +2,10 @@ package com.unipi.mns.mnscrm00.services.concretes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
-import com.unipi.mns.mnscrm00.dal.ContactRepository;
-import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
+import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
+import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
@@ -20,40 +20,39 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ContactService implements EntityService {
+public class OpportunityService implements EntityService {
 
     @Autowired
-    private ContactRepository contactRepository;
+    private OpportunityRepository opportunityRepository;
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private RelationshipMapper relationshipMapper;
 
-    public ContactDTO getContactByIdSimple(String id){
-        Optional<Contact> contactOptional = contactRepository.findById(id);
+    public OpportunityDTO getOpportunityByIdSimple(String id){
+        Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
 
-        if(!contactOptional.isPresent()){
+        if(!opptyOptional.isPresent()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
+                            Constants.Entity.OPPORTUNITY,
                             Constants.Specifier.ID
                     )
             );
         }
 
-        return contactOptional.get().toDTOSimple();
+        return opptyOptional.get().toDTOSimple();
     }
 
-    public ContactDTO getContactByIdComplete(String id){
-        Optional<Contact> contactOptional = contactRepository.findById(id);
+    public OpportunityDTO getOpportunityByIdComplete(String id){
+        Optional<Opportunity> contactOptional = opportunityRepository.findById(id);
 
         if(!contactOptional.isPresent()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
+                            Constants.Entity.OPPORTUNITY,
                             Constants.Specifier.ID
                     )
             );
@@ -62,65 +61,66 @@ public class ContactService implements EntityService {
         return contactOptional.get().toDTOComplete();
     }
 
-    public ContactDTO insertContact(Contact contact){
-        Contact contactToInsert = new Contact();
+    public OpportunityDTO insertOpportunity(Opportunity opportunity){
+        Opportunity opptyToInsert = new Opportunity();
 
-        contactToInsert = ObjectMapper.mapContactFields(contact, contactToInsert);
-        contactToInsert = relationshipMapper.mapContactParents(contact, contactToInsert, true);
-        
-        return contactRepository.save(contactToInsert).toDTOSimple();
+        opptyToInsert = ObjectMapper.mapOpportunityFields(opportunity, opptyToInsert);
+        opptyToInsert = relationshipMapper.mapOpportunityParents(opportunity, opptyToInsert, true);
+
+        return opportunityRepository.save(opptyToInsert).toDTOSimple();
     }
 
-    public List<ContactDTO> getAllContacts(){
-        List<Contact> contactList = contactRepository.findAll();
+    public List<OpportunityDTO> getAllContacts(){
+        List<Opportunity> contactList = opportunityRepository.findAll();
 
         if(contactList.size() <= 0){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
+                            Constants.Entity.OPPORTUNITY,
                             Constants.Specifier.ID
                     )
             );
         }
 
-        return ListConverter.convertContactsToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertOpportunitiesToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public ContactDTO updateContact(String id, Contact contact){
-        Optional<Contact> contactOptional = contactRepository.findById(id);
+    public OpportunityDTO updateOpportunity(String id, Opportunity opportunity){
+        Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
 
-        if(!contactOptional.isPresent()){
+        if(!opptyOptional.isPresent()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
+                            Constants.Entity.OPPORTUNITY,
                             Constants.Specifier.ID
                     )
             );
         }
 
-        Contact contactToUpdate = contactOptional.get();
-        contactToUpdate = ObjectMapper.mapContactFields(contact, contactToUpdate);
-        contactToUpdate = relationshipMapper.mapContactParents(contact, contactToUpdate, false);
-        return contactRepository.save(contactToUpdate).toDTOSimple();
+        Opportunity opptyToUpdate = opptyOptional.get();
+        opptyToUpdate = ObjectMapper.mapOpportunityFields(opportunity, opptyToUpdate);
+        opptyToUpdate = relationshipMapper.mapOpportunityParents(opportunity, opptyToUpdate, false);
+
+        return opportunityRepository.save(opptyToUpdate).toDTOSimple();
     }
 
-    public boolean deleteContactById(String id){
-        Optional<Contact> contactOptional = contactRepository.findById(id);
+    public boolean deleteOpportunityById(String id){
+        Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
 
-        if(!contactOptional.isPresent()){
+        if(!opptyOptional.isPresent()){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
+                            Constants.Entity.OPPORTUNITY,
                             Constants.Specifier.ID
                     )
             );
         }
 
-        if(contactOptional.get().getAccount() != null){
-            Optional<Account> accountOptional = accountRepository.findById(contactOptional.get().getAccount().getId());
+        if(opptyOptional.get().getRelatedAccount() != null){
+            Optional<Account> accountOptional = accountRepository.findById(opptyOptional.get().getRelatedAccountId());
 
             if(!accountOptional.isPresent()){
                 throw new ResponseStatusException(
@@ -132,11 +132,11 @@ public class ContactService implements EntityService {
                 );
             }
 
-            accountOptional.get().getContacts().remove(contactOptional.get());
+            accountOptional.get().getOpportunities().remove(opptyOptional.get());
             accountRepository.save(accountOptional.get());
         }
 
-        contactRepository.delete(contactOptional.get());
+        opportunityRepository.delete(opptyOptional.get());
 
         return true;
     }

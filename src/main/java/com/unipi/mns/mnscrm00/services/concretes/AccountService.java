@@ -73,6 +73,8 @@ public class AccountService implements EntityService {
     public AccountDTO insertAccount(Account account){
         Account acc = new Account();
         acc = ObjectMapper.mapAccountFields(account, acc);
+        acc = relationshipMapper.mapAccountParents(account, acc);
+
         return accountRepository.save(acc).toDTOSimple();
     }
 
@@ -89,7 +91,7 @@ public class AccountService implements EntityService {
             );
         }
 
-        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public List<AccountDTO> getAllAccountsWithFilters(int limit, String orderByField, String orderType){
@@ -138,7 +140,15 @@ public class AccountService implements EntityService {
             );
         }
 
-        accountRepository.delete(accountOptional.get());
+        Account accToDelete = accountOptional.get();
+        List<Account> accountList = accountRepository.findByParentId(accToDelete.getId());
+        for(Account acc : accountList){
+            acc.setParent(null);
+            acc.setParentId(null);
+            accountRepository.save(acc);
+        }
+
+        accountRepository.delete(accToDelete);
 
         return true;
     }

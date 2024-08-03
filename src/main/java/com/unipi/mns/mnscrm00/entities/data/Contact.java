@@ -7,8 +7,11 @@ import com.unipi.mns.mnscrm00.dto.simples.ContactDTOSimple;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -56,8 +59,17 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
     @Column(name="role")
     private String role;
 
-    public Contact(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role) {
-        this.account = account;
+    @Column(name="account_id_txt")
+    private String accountId;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
+    public Contact(Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role, LocalDateTime created, LocalDateTime modified) {
         this.birthdate = birthdate;
         this.department = department;
         this.email = email;
@@ -69,6 +81,13 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
         this.phone = phone;
         this.prefix = prefix;
         this.role = role;
+        this.created = created;
+        this.modified = modified;
+        this.account = account;
+
+        if(account != null){
+            this.accountId = account.getId();
+        }
     }
 
     public Contact() {}
@@ -83,6 +102,30 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 
     public Date getBirthdate() {
@@ -175,16 +218,16 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
 
     @Override
     public ContactDTO toDTOSimple() {
-        return new ContactDTOSimple(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
+        return new ContactDTOSimple(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
     }
 
     @Override
     public ContactDTO toDTOComplete() {
-        return new ContactDTOComplete(cases, account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
+        return new ContactDTOComplete(cases, account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
     }
 
     @Override
     public ContactDTO toDTOMinimal() {
-        return new ContactDTOMinimal(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role);
+        return new ContactDTOMinimal(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
     }
 }

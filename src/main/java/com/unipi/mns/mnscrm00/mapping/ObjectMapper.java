@@ -3,6 +3,7 @@ package com.unipi.mns.mnscrm00.mapping;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
+import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 
 public class ObjectMapper {
 
@@ -59,6 +60,19 @@ public class ObjectMapper {
         result.setContactPrefix(source.getContactPrefix());
         result.setStatus(source.getStatus());
         result.setContactPerson(source.getContactPerson());
+
+        return result;
+    }
+
+    public static Opportunity mapOpportunityFields(Opportunity source, Opportunity target){
+        Opportunity result = target;
+
+        result.setStatus(source.getStatus());
+        result.setTitle(source.getTitle());
+        result.setExpectedRevenue(source.getExpectedRevenue());
+        result.setComments(source.getComments());
+        result.setType(source.getType());
+        result.setDescription(source.getDescription());
 
         return result;
     }
