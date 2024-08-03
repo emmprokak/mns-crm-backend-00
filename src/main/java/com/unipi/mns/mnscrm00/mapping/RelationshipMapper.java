@@ -2,8 +2,10 @@ package com.unipi.mns.mnscrm00.mapping;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 @Component
 public class RelationshipMapper {
@@ -47,4 +50,9 @@ public class RelationshipMapper {
 
         return opptyToBeUpdated;
     }
+
+    public List<DataEntity> mapLeadToChildren(Account acc, Contact con, Opportunity opp, Lead lead){
+            return relHandlerHelper.handleChildrenParentLead(acc, con, opp, lead);
+    }
+
 }

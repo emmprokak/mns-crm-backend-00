@@ -5,6 +5,9 @@ import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ObjectMapper {
 
     public static Account mapAccountFields(Account source, Account target){
@@ -76,4 +79,49 @@ public class ObjectMapper {
 
         return result;
     }
+
+    public static Account mapLeadToAccount(Lead lead, Account account){
+        Account result = account;
+
+        result.setCompanyName(lead.getCompanyName());
+        result.setBillingAddress(lead.getCompanyAddress());
+        result.setIndustry(lead.getCompanyIndustry());
+        result.setActive(true);
+
+        return result;
+    }
+
+    public static Contact mapLeadToContact(Lead lead, Contact contact){
+        Contact result = contact;
+
+        List<String> nameComponents = Arrays.asList(lead.getContactPerson().split(" "));
+        if(nameComponents.size() > 1){
+            result.setFirstName(nameComponents.get(0));
+            result.setLastName(nameComponents.get(1));
+        }else if(nameComponents.size() == 1){
+            result.setFirstName(nameComponents.get(0));
+            result.setLastName(nameComponents.get(0));
+        }else{
+            result.setFirstName("NONAME");
+            result.setFirstName("NONAME");
+        }
+
+        result.setRole(lead.getContactRole());
+        result.setMobile(lead.getContactMobile());
+        result.setPhone(lead.getContactPhone());
+        result.setEmail(lead.getContactEmail());
+        result.setPrefix(lead.getContactPrefix());
+
+        return result;
+    }
+
+    public static Opportunity mapLeadToOpportunity(Lead lead, Opportunity opportunity){
+        Opportunity result = opportunity;
+
+        result.setStatus("new");
+        result.setTitle(lead.getCompanyName() + " " + "Opp 1");
+
+        return result;
+    }
+
 }

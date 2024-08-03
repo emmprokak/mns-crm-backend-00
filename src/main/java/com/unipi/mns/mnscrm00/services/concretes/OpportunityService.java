@@ -71,9 +71,9 @@ public class OpportunityService implements EntityService {
     }
 
     public List<OpportunityDTO> getAllContacts(){
-        List<Opportunity> contactList = opportunityRepository.findAll();
+        List<Opportunity> opptyList = opportunityRepository.findAll();
 
-        if(contactList.size() <= 0){
+        if(opptyList.size() <= 0){
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     ErrorMessageUtility.getEntityNotFoundBySpecifier(
@@ -83,7 +83,7 @@ public class OpportunityService implements EntityService {
             );
         }
 
-        return ListConverter.convertOpportunitiesToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertOpportunitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public OpportunityDTO updateOpportunity(String id, Opportunity opportunity){
