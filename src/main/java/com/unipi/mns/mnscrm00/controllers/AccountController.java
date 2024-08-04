@@ -50,20 +50,20 @@ public class AccountController {
       return accountService.deleteAccountById(id);
     }
 
-    @PostMapping("/{id}/add-contact")
-    public AccountDTO addContact(@PathVariable String id, @RequestBody Contact contact){
-        return accountService.addContactToAccount(id, contact);
-    }
-
-    @PostMapping("/{id}/relate-contact/{contactId}")
-    public AccountDTO addContact(@PathVariable String id, @PathVariable String contactId){
-        return accountService.relateContactToAccount(id, contactId);
-    }
-
-    @DeleteMapping("/{accountId}/remove-contact/{contactId}")
-    public AccountDTO removeContact(@PathVariable String accountId, @PathVariable String contactId){
-        return accountService.removeContactFromAccount(accountId, contactId);
-    }
+//    @PostMapping("/{id}/add-contact")
+//    public AccountDTO addContact(@PathVariable String id, @RequestBody Contact contact){
+//        return accountService.addContactToAccount(id, contact);
+//    }
+//
+//    @PostMapping("/{id}/relate-contact/{contactId}")
+//    public AccountDTO addContact(@PathVariable String id, @PathVariable String contactId){
+//        return accountService.relateContactToAccount(id, contactId);
+//    }
+//
+//    @DeleteMapping("/{accountId}/remove-contact/{contactId}")
+//    public AccountDTO removeContact(@PathVariable String accountId, @PathVariable String contactId){
+//        return accountService.removeContactFromAccount(accountId, contactId);
+//    }
 
     /*
     @GetMapping("/speciality/{speciality}")

@@ -3,6 +3,7 @@ package com.unipi.mns.mnscrm00.dto.abstracts;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class TaskDTO implements EntityDTO{
@@ -14,14 +15,18 @@ public class TaskDTO implements EntityDTO{
     private String type;
     private String relatedLeadId;
     private String relatedOpportunityId;
+    private LocalDateTime created;
+    private LocalDateTime modified;
 
-    public TaskDTO(Date dueDate, String id, String name, String reason, String status, String type, Lead lead, Opportunity opportunity) {
+    public TaskDTO(Date dueDate, String id, String name, String reason, String status, String type, Lead lead, Opportunity opportunity, LocalDateTime created, LocalDateTime modified) {
         this.dueDate = dueDate;
         this.id = id;
         this.name = name;
         this.reason = reason;
         this.status = status;
         this.type = type;
+        this.created = created;
+        this.modified = modified;
 
         if(lead != null){
             this.relatedLeadId = lead.getId();

@@ -153,102 +153,104 @@ public class AccountService implements EntityService {
         return true;
     }
 
-    public AccountDTO addContactToAccount(String id, Contact contact){
-        Optional<Account> accountOptional = accountRepository.findById(id);
-
-        if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.ACCOUNT,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        Contact contactToInsert = contact;
-        contactToInsert.setAccount(accountOptional.get());
-        Contact insertedContact = contactRepository.save(contactToInsert);
-
-        Account accToUpdate = accountOptional.get();
-        accToUpdate.getContacts().add(insertedContact);
-        accountRepository.save(accToUpdate);
-
-        return accToUpdate.toDTOComplete();
-    }
-
-    public AccountDTO relateContactToAccount(String accountId, String contactId){
-        Optional<Account> accountOptional = accountRepository.findById(accountId);
-
-        if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.ACCOUNT,
-                            Constants.Specifier.ID
-                    )
-            );
-
-        }
-
-        Optional<Contact> contactOptional = contactRepository.findById(contactId);
-
-        if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        accountOptional.get().getContacts().add(contactOptional.get());
-        contactOptional.get().setAccount(accountOptional.get());
-
-        contactRepository.save(contactOptional.get());
-        return accountRepository.save(accountOptional.get()).toDTOComplete();
-    }
-
-    public AccountDTO removeContactFromAccount(String accountId, String contactId){
-        Optional<Account> accountOptional = accountRepository.findById(accountId);
-
-        if(!accountOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.ACCOUNT,
-                            Constants.Specifier.ID
-                    )
-            );
-
-        }
-
-        Optional<Contact> contactOptional = contactRepository.findById(contactId);
-
-        if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        if(!accountOptional.get().getContacts().contains(contactOptional.get())){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getRelationshipNotFound(
-                            Constants.Entity.ACCOUNT,
-                            Constants.Entity.CONTACT
-                    )
-            );
-        }
-
-        accountOptional.get().getContacts().remove(contactOptional.get());
-        contactOptional.get().setAccount(null);
-        contactRepository.save(contactOptional.get());
-        return accountRepository.save(accountOptional.get()).toDTOComplete();
-    }
+    // pending deletion
+//
+//    public AccountDTO addContactToAccount(String id, Contact contact){
+//        Optional<Account> accountOptional = accountRepository.findById(id);
+//
+//        if(!accountOptional.isPresent()){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+//                            Constants.Entity.ACCOUNT,
+//                            Constants.Specifier.ID
+//                    )
+//            );
+//        }
+//
+//        Contact contactToInsert = contact;
+//        contactToInsert.setAccount(accountOptional.get());
+//        Contact insertedContact = contactRepository.save(contactToInsert);
+//
+//        Account accToUpdate = accountOptional.get();
+//        accToUpdate.getContacts().add(insertedContact);
+//        accountRepository.save(accToUpdate);
+//
+//        return accToUpdate.toDTOComplete();
+//    }
+//
+//    public AccountDTO relateContactToAccount(String accountId, String contactId){
+//        Optional<Account> accountOptional = accountRepository.findById(accountId);
+//
+//        if(!accountOptional.isPresent()){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+//                            Constants.Entity.ACCOUNT,
+//                            Constants.Specifier.ID
+//                    )
+//            );
+//
+//        }
+//
+//        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+//
+//        if(!contactOptional.isPresent()){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+//                            Constants.Entity.CONTACT,
+//                            Constants.Specifier.ID
+//                    )
+//            );
+//        }
+//
+//        accountOptional.get().getContacts().add(contactOptional.get());
+//        contactOptional.get().setAccount(accountOptional.get());
+//
+//        contactRepository.save(contactOptional.get());
+//        return accountRepository.save(accountOptional.get()).toDTOComplete();
+//    }
+//
+//    public AccountDTO removeContactFromAccount(String accountId, String contactId){
+//        Optional<Account> accountOptional = accountRepository.findById(accountId);
+//
+//        if(!accountOptional.isPresent()){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+//                            Constants.Entity.ACCOUNT,
+//                            Constants.Specifier.ID
+//                    )
+//            );
+//
+//        }
+//
+//        Optional<Contact> contactOptional = contactRepository.findById(contactId);
+//
+//        if(!contactOptional.isPresent()){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+//                            Constants.Entity.CONTACT,
+//                            Constants.Specifier.ID
+//                    )
+//            );
+//        }
+//
+//        if(!accountOptional.get().getContacts().contains(contactOptional.get())){
+//            throw new ResponseStatusException(
+//                    HttpStatus.BAD_REQUEST,
+//                    ErrorMessageUtility.getRelationshipNotFound(
+//                            Constants.Entity.ACCOUNT,
+//                            Constants.Entity.CONTACT
+//                    )
+//            );
+//        }
+//
+//        accountOptional.get().getContacts().remove(contactOptional.get());
+//        contactOptional.get().setAccount(null);
+//        contactRepository.save(contactOptional.get());
+//        return accountRepository.save(accountOptional.get()).toDTOComplete();
+//    }
 }

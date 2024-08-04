@@ -7,8 +7,11 @@ import com.unipi.mns.mnscrm00.dto.simples.TaskDTOSimple;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -51,6 +54,13 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
     @Column(name = "type")
     private String type;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
 
     public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type) {
         this.dueDate = dueDate;
@@ -75,17 +85,17 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
 
     @Override
     public TaskDTO toDTOSimple() {
-        return new TaskDTOSimple(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+        return new TaskDTOSimple(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity, created, modified);
     }
 
     @Override
     public TaskDTO toDTOComplete() {
-        return new TaskDTOComplete(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+        return new TaskDTOComplete(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity, created, modified);
     }
 
     @Override
     public TaskDTO toDTOMinimal() {
-        return new TaskDTOMinimal(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+        return new TaskDTOMinimal(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity, created, modified);
     }
 
     public String getRelatedLeadId() {

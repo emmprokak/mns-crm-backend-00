@@ -20,7 +20,7 @@ import java.util.Optional;
 @Service
 public class TaskService {
     @Autowired
-    TaskRepository taskRepository;
+    private TaskRepository taskRepository;
     @Autowired
     private RelationshipMapper relationshipMapper;
 
@@ -78,7 +78,7 @@ public class TaskService {
             );
         }
 
-        return ListConverter.convertTasksToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertTasksToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public TaskDTO updateTask(String id, Task task){
