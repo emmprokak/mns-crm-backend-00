@@ -66,10 +66,10 @@ public class RelationshipHandlerHelper {
     public Contact handleContactParentAccount(Contact reqContact, Contact conToBeUpdated, Boolean isInsert) {
         System.out.println("received = " + reqContact.getAccountId() + " and found = " + conToBeUpdated.getAccountId());
         if ((reqContact.getAccountId() == null || reqContact.getAccountId().isBlank()) && conToBeUpdated.getAccountId() != null) {
+            String parentAccountId = conToBeUpdated.getAccountId();
+
             conToBeUpdated.setAccountId(null);
             conToBeUpdated.setAccount(null);
-
-            String parentAccountId = conToBeUpdated.getAccountId();
 
             Optional<Account> parentAccountOptional = accountRepository.findById(parentAccountId);
 
@@ -118,10 +118,10 @@ public class RelationshipHandlerHelper {
 
     public Opportunity handleOpportunityParentAccount(Opportunity reqOpportunity, Opportunity opptyToBeUpdated, Boolean isInsert) {
         if ((reqOpportunity.getRelatedAccountId() == null || reqOpportunity.getRelatedAccountId().isBlank()) && opptyToBeUpdated.getRelatedAccountId() != null) {
-            opptyToBeUpdated.setRelatedAccountId(null);
-            opptyToBeUpdated.setRelatedAccountId(null);
-
             String parentAccountId = opptyToBeUpdated.getRelatedAccountId();
+
+            opptyToBeUpdated.setRelatedAccountId(null);
+            opptyToBeUpdated.setRelatedAccount(null);
 
             Optional<Account> parentAccountOptional = accountRepository.findById(parentAccountId);
 
@@ -136,7 +136,7 @@ public class RelationshipHandlerHelper {
             }
 
 
-            parentAccountOptional.get().getContacts().remove(opptyToBeUpdated);
+            parentAccountOptional.get().getOpportunities().remove(opptyToBeUpdated);
             accountRepository.save(parentAccountOptional.get());
 
 

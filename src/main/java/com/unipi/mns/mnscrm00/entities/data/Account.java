@@ -47,13 +47,13 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Contact> contacts;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Case> cases;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<VoiceCall> calls;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     List<Opportunity> opportunities;
 
     @Column(name="company_name")

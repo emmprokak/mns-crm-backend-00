@@ -8,6 +8,7 @@ import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
+import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,11 +25,11 @@ public class RelationshipMapper {
     public Account mapAccountParents(Account reqAcc, Account accToBeUpdated){
         Account result = accToBeUpdated;
 
-        if(reqAcc.getParentId() != accToBeUpdated.getParentId()){
+        if(!StringUtil.stringsAreEqual(reqAcc.getParentId(), accToBeUpdated.getParentId())){
             result = relHandlerHelper.handleAccountParentAccount(reqAcc, accToBeUpdated);
         }
 
-        if(reqAcc.getRelatedLeadId() != accToBeUpdated.getRelatedLeadId()){
+        if(!StringUtil.stringsAreEqual(reqAcc.getRelatedLeadId(), accToBeUpdated.getRelatedLeadId())){
             result = relHandlerHelper.handleAccountParentLead(reqAcc, accToBeUpdated);
         }
 
@@ -36,7 +37,7 @@ public class RelationshipMapper {
     }
 
     public Contact mapContactParents(Contact reqContact, Contact conToBeUpdated, Boolean isInsert){
-        if(reqContact.getAccountId() != conToBeUpdated.getAccountId()){
+        if(!StringUtil.stringsAreEqual(reqContact.getAccountId(), conToBeUpdated.getAccountId())){
             conToBeUpdated = relHandlerHelper.handleContactParentAccount(reqContact, conToBeUpdated, isInsert);
         }
 
@@ -44,7 +45,7 @@ public class RelationshipMapper {
     }
 
     public Opportunity mapOpportunityParents(Opportunity reqOppty, Opportunity opptyToBeUpdated, Boolean isInsert){
-        if(reqOppty.getRelatedAccountId() != opptyToBeUpdated.getRelatedAccountId()){
+        if(!StringUtil.stringsAreEqual(reqOppty.getRelatedAccountId(), opptyToBeUpdated.getRelatedAccountId())){
             opptyToBeUpdated = relHandlerHelper.handleOpportunityParentAccount(reqOppty, opptyToBeUpdated, isInsert);
         }
 

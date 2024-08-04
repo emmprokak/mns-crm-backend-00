@@ -3,6 +3,7 @@ package com.unipi.mns.mnscrm00.dto.completes;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
+import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
 import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.exceptions.ListConversionException;
@@ -16,7 +17,7 @@ public class AccountDTOComplete extends AccountDTOSimple {
     private List<ContactDTO> contacts;
     private List<Case> cases;
     private List<VoiceCall> calls;
-    private List<Opportunity> opportunities;
+    private List<OpportunityDTO> opportunities;
 
     public AccountDTOComplete(){
         super();
@@ -28,14 +29,14 @@ public class AccountDTOComplete extends AccountDTOSimple {
         this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.cases = cases; // TODO: convert all to minimal
         this.calls = calls;
-        this.opportunities = opportunities;
+        this.opportunities = ListConverter.convertOpportunitiesToDTOList(opportunities, Constants.DTO.CONVERT_TO_DTO_MINIMAL);;
     }
 
-    public List<Opportunity> getOpportunities() {
+    public List<OpportunityDTO> getOpportunities() {
         return opportunities;
     }
 
-    public void setOpportunities(List<Opportunity> opportunities) {
+    public void setOpportunities(List<OpportunityDTO> opportunities) {
         this.opportunities = opportunities;
     }
 
