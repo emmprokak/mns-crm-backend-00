@@ -100,7 +100,7 @@ public class LeadService implements EntityService {
         return leadRepository.save(leadToUpdate).toDTOSimple();
     }
 
-    public boolean deleteContactById(String id){
+    public boolean deleteLeadById(String id){
         Optional<Lead> leadOptional = leadRepository.findById(id);
 
         if(!leadOptional.isPresent()){

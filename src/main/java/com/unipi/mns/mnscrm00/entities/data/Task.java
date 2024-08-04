@@ -1,5 +1,11 @@
 package com.unipi.mns.mnscrm00.entities.data;
 
+import com.unipi.mns.mnscrm00.dto.abstracts.TaskDTO;
+import com.unipi.mns.mnscrm00.dto.completes.TaskDTOComplete;
+import com.unipi.mns.mnscrm00.dto.minimals.TaskDTOMinimal;
+import com.unipi.mns.mnscrm00.dto.simples.TaskDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -7,7 +13,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="Task_ent")
-public class Task {
+public class Task implements Sendable<TaskDTO>, DataEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -16,27 +22,33 @@ public class Task {
     @JoinColumn(name = "lead_id")
     private Lead relatedLead;
 
+    @Column(name = "lead_id_txt")
+    private String relatedLeadId;
+
     @ManyToOne
     @JoinColumn(name = "opportunity_id")
     private Opportunity relatedOpportunity;
+
+    @Column(name = "opportunity_id_txt")
+    private String relatedOpportunityId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User responsible;
 
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name="reason")
+    @Column(name = "reason")
     private String reason;
 
-    @Column(name="due_date")
+    @Column(name = "due_date")
     private Date dueDate;
 
-    @Column(name="status")
+    @Column(name = "status")
     private String status;
 
-    @Column(name="type")
+    @Column(name = "type")
     private String type;
 
 
@@ -52,7 +64,45 @@ public class Task {
         this.type = type;
     }
 
-    public Task() {}
+    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type, String relatedLeadId, String relatedOpportunityId) {
+        this(dueDate, id, name, reason, relatedLead, relatedOpportunity, responsible, status, type);
+        this.relatedLeadId = relatedLeadId;
+        this.relatedOpportunityId = relatedOpportunityId;
+    }
+
+    public Task() {
+    }
+
+    @Override
+    public TaskDTO toDTOSimple() {
+        return new TaskDTOSimple(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+    }
+
+    @Override
+    public TaskDTO toDTOComplete() {
+        return new TaskDTOComplete(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+    }
+
+    @Override
+    public TaskDTO toDTOMinimal() {
+        return new TaskDTOMinimal(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity);
+    }
+
+    public String getRelatedLeadId() {
+        return relatedLeadId;
+    }
+
+    public void setRelatedLeadId(String relatedLeadId) {
+        this.relatedLeadId = relatedLeadId;
+    }
+
+    public String getRelatedOpportunityId() {
+        return relatedOpportunityId;
+    }
+
+    public void setRelatedOpportunityId(String relatedOpportunityId) {
+        this.relatedOpportunityId = relatedOpportunityId;
+    }
 
     public Date getDueDate() {
         return dueDate;

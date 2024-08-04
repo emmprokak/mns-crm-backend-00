@@ -3,10 +3,7 @@ package com.unipi.mns.mnscrm00.utilities;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dto.abstracts.*;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
-import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Lead;
-import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.exceptions.ListConversionException;
 
 import java.util.ArrayList;
@@ -86,6 +83,26 @@ public class ListConverter {
                 break;
             case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
                 opportunities.forEach(opp -> dtos.add(opp.toDTOComplete()));
+                break;
+            default:
+                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
+        }
+
+        return dtos;
+    }
+
+    public static List<TaskDTO> convertTasksToDTOList(List<Task> tasks, int conversionType){
+        List<TaskDTO> dtos = new ArrayList<>();
+
+        switch(conversionType){
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
+                tasks.forEach(task -> dtos.add(task.toDTOMinimal()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
+                tasks.forEach(task -> dtos.add(task.toDTOSimple()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
+                tasks.forEach(task -> dtos.add(task.toDTOComplete()));
                 break;
             default:
                 //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");

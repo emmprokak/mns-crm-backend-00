@@ -3,10 +3,7 @@ package com.unipi.mns.mnscrm00.mapping;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
-import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Lead;
-import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +47,18 @@ public class RelationshipMapper {
         }
 
         return opptyToBeUpdated;
+    }
+
+    public Task mapTaskParents(Task reqTask, Task taskToBeUpdated, Boolean isInsert){
+        if(!StringUtil.stringsAreEqual(reqTask.getRelatedLeadId(), taskToBeUpdated.getRelatedLeadId())){
+            taskToBeUpdated = relHandlerHelper.handleTaskParentLead(reqTask, taskToBeUpdated, isInsert);
+        }
+
+        if(!StringUtil.stringsAreEqual(reqTask.getRelatedOpportunityId(), taskToBeUpdated.getRelatedOpportunityId())){
+            taskToBeUpdated = relHandlerHelper.handleTaskParentOpportunity(reqTask, taskToBeUpdated, isInsert);
+        }
+
+        return taskToBeUpdated;
     }
 
     public List<DataEntity> mapLeadToChildren(Account acc, Contact con, Opportunity opp, Lead lead){

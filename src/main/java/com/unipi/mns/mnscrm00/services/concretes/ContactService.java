@@ -107,6 +107,7 @@ public class ContactService implements EntityService {
     }
 
     public boolean deleteContactById(String id){
+        // TODO: update to use rel mapper instead of magic logic here
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){

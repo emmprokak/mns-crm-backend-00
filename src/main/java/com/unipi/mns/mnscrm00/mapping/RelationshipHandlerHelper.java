@@ -1,21 +1,15 @@
 package com.unipi.mns.mnscrm00.mapping;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
-import com.unipi.mns.mnscrm00.dal.AccountRepository;
-import com.unipi.mns.mnscrm00.dal.ContactRepository;
-import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
+import com.unipi.mns.mnscrm00.dal.*;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
-import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Lead;
-import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +20,12 @@ public class RelationshipHandlerHelper {
     private AccountRepository accountRepository;
     @Autowired
     private ContactRepository contactRepository;
-
     @Autowired
     private OpportunityRepository opportunityRepository;
+    @Autowired
+    private TaskRepository taskRepository;
+    @Autowired
+    private LeadRepository leadRepository;
 
 
     public Account handleAccountParentLead(Account reqAccount, Account accToBeUpdated) {
@@ -43,8 +40,6 @@ public class RelationshipHandlerHelper {
             return accToBeUpdated;
         }
 
-        // add new relationship
-//        if(reqAccount.getParentId() != null && accToBeUpdated.getParentId() == null){
         Optional<Account> parentAccountOptional = accountRepository.findById(reqAccount.getParentId());
 
         if (!parentAccountOptional.isPresent()) {
@@ -166,6 +161,108 @@ public class RelationshipHandlerHelper {
         foundParentAccount.getOpportunities().add(opptyToBeUpdated);
         accountRepository.save(foundParentAccount);
         return opptyToBeUpdated;
+    }
+
+    public Task handleTaskParentLead(Task reqTask, Task taskToBeUpdated, Boolean isInsert) {
+        if ((reqTask.getRelatedLeadId() == null || reqTask.getRelatedLeadId().isBlank()) && reqTask.getRelatedLeadId() != null) {
+            String parentLeadId = taskToBeUpdated.getRelatedLeadId();
+
+            taskToBeUpdated.setRelatedLeadId(null);
+            taskToBeUpdated.setRelatedLead(null);
+
+            Optional<Lead> parentLeadOptional = leadRepository.findById(parentLeadId);
+
+            if (!parentLeadOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.LEAD,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentLeadOptional.get().getTasks().remove(taskToBeUpdated);
+            leadRepository.save(parentLeadOptional.get());
+
+            return taskToBeUpdated;
+        }
+
+        Optional<Lead> parentLeadOptional = leadRepository.findById(reqTask.getRelatedLeadId());
+
+        if (!parentLeadOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.LEAD,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Lead foundParentLead = parentLeadOptional.get();
+        taskToBeUpdated.setRelatedLeadId(foundParentLead.getId());
+        taskToBeUpdated.setRelatedLead(foundParentLead);
+
+        if(isInsert){
+            taskRepository.save(taskToBeUpdated);
+        }
+
+        foundParentLead.getTasks().add(taskToBeUpdated);
+        leadRepository.save(foundParentLead);
+        return taskToBeUpdated;
+    }
+
+    public Task handleTaskParentOpportunity(Task reqTask, Task taskToBeUpdated, Boolean isInsert) {
+        if ((reqTask.getRelatedOpportunityId() == null || reqTask.getRelatedOpportunityId().isBlank()) && reqTask.getRelatedOpportunityId() != null) {
+            String parentOpportunityId = taskToBeUpdated.getRelatedOpportunityId();
+
+            taskToBeUpdated.setRelatedOpportunityId(null);
+            taskToBeUpdated.setRelatedOpportunity(null);
+
+            Optional<Opportunity> parentOpportunityOptional = opportunityRepository.findById(parentOpportunityId);
+
+            if (!parentOpportunityOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.OPPORTUNITY,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentOpportunityOptional.get().getTasks().remove(taskToBeUpdated);
+            opportunityRepository.save(parentOpportunityOptional.get());
+
+            return taskToBeUpdated;
+        }
+
+        Optional<Opportunity> parentOpportunityOptional = opportunityRepository.findById(reqTask.getRelatedOpportunityId());
+
+        if (!parentOpportunityOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.OPPORTUNITY,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Opportunity foundParentOpportunity = parentOpportunityOptional.get();
+        taskToBeUpdated.setRelatedOpportunityId(foundParentOpportunity.getId());
+        taskToBeUpdated.setRelatedOpportunity(foundParentOpportunity);
+
+        if(isInsert){
+            taskRepository.save(taskToBeUpdated);
+        }
+
+        foundParentOpportunity.getTasks().add(taskToBeUpdated);
+        opportunityRepository.save(foundParentOpportunity);
+        return taskToBeUpdated;
     }
 
     public List<DataEntity> handleChildrenParentLead(Account acc, Contact con, Opportunity opp, Lead lead){

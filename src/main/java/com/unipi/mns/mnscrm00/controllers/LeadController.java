@@ -45,6 +45,6 @@ public class LeadController {
 
     @DeleteMapping("/{id}")
     public boolean deleteLead(@PathVariable String id){
-        return leadService.deleteContactById(id);
+        return leadService.deleteLeadById(id);
     }
 }

@@ -1,9 +1,6 @@
 package com.unipi.mns.mnscrm00.mapping;
 
-import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Lead;
-import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.entities.data.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -76,6 +73,19 @@ public class ObjectMapper {
         result.setComments(source.getComments());
         result.setType(source.getType());
         result.setDescription(source.getDescription());
+
+        return result;
+    }
+
+    public static Task mapTaskFields(Task source, Task target){
+        Task result = target;
+
+        result.setStatus(source.getStatus());
+        result.setDueDate(source.getDueDate());
+        result.setName(source.getName());
+        result.setReason(source.getReason());
+        result.setStatus(source.getStatus());
+        result.setType(source.getType());
 
         return result;
     }
