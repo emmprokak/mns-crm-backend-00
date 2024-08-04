@@ -9,6 +9,7 @@ import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class LeadService implements EntityService {
 
     @Autowired
     LeadRepository leadRepository;
+    @Autowired
+    private InsertUpdateTrigger insertUpdateTrigger;
 
     public LeadDTO getLeadByIdSimple(String id){
         Optional<Lead> leadOptional = leadRepository.findById(id);
@@ -95,7 +98,7 @@ public class LeadService implements EntityService {
         }
 
         Lead leadToUpdate = leadOptional.get();
-        leadToUpdate = ObjectMapper.mapLeadFields(lead, leadToUpdate);
+        leadToUpdate = insertUpdateTrigger.handleLeadEntry(lead, leadToUpdate);
 
         return leadRepository.save(leadToUpdate).toDTOSimple();
     }

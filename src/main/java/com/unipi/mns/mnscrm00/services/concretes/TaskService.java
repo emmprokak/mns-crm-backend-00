@@ -7,6 +7,7 @@ import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Task;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
+import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private RelationshipMapper relationshipMapper;
+    @Autowired
+    private InsertUpdateTrigger insertUpdateTrigger;
 
     public TaskDTO getTaskByIdSimple(String id){
         Optional<Task> taskOptional = taskRepository.findById(id);
@@ -58,9 +61,7 @@ public class TaskService {
 
     public TaskDTO insertTask(Task task){
         Task taskToInsert = new Task();
-
-        taskToInsert = ObjectMapper.mapTaskFields(task, taskToInsert);
-        taskToInsert = relationshipMapper.mapTaskParents(task, taskToInsert, true);
+        taskToInsert = insertUpdateTrigger.handleTaskEntry(task, taskToInsert, true);
 
         return taskRepository.save(taskToInsert).toDTOSimple();
     }
@@ -95,9 +96,7 @@ public class TaskService {
         }
 
         Task taskToUpdate = taskOptional.get();
-        taskToUpdate = ObjectMapper.mapTaskFields(task, taskToUpdate);
-        taskToUpdate = relationshipMapper.mapTaskParents(task, taskToUpdate, false);
-
+        taskToUpdate = insertUpdateTrigger.handleTaskEntry(task, taskToUpdate, false);
 
         return taskRepository.save(taskToUpdate).toDTOSimple();
     }

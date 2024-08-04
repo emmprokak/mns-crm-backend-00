@@ -10,6 +10,7 @@ import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,13 @@ import java.util.stream.Collectors;
 public class AccountService implements EntityService {
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
-    private ContactService contactService;
+    private InsertUpdateTrigger insertUpdateTrigger;
+//    @Autowired
+//    private ContactRepository contactRepository;
+//    @Autowired
+//    private ContactService contactService;
 
     @Autowired
     private RelationshipMapper relationshipMapper;
@@ -72,8 +76,7 @@ public class AccountService implements EntityService {
 
     public AccountDTO insertAccount(Account account){
         Account acc = new Account();
-        acc = ObjectMapper.mapAccountFields(account, acc);
-        acc = relationshipMapper.mapAccountParents(account, acc);
+        acc = insertUpdateTrigger.handleAccountEntry(account, acc);
 
         return accountRepository.save(acc).toDTOSimple();
     }
@@ -121,8 +124,7 @@ public class AccountService implements EntityService {
         }
 
         Account accToUpdate = accountOptional.get();
-        accToUpdate = ObjectMapper.mapAccountFields(account, accToUpdate);
-        accToUpdate = relationshipMapper.mapAccountParents(account, accToUpdate);
+        accToUpdate = insertUpdateTrigger.handleAccountEntry(account, accToUpdate);
 
         return accountRepository.save(accToUpdate).toDTOSimple();
     }

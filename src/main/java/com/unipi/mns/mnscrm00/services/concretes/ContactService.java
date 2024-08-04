@@ -9,6 +9,7 @@ import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class ContactService implements EntityService {
 
     @Autowired
     private RelationshipMapper relationshipMapper;
+    @Autowired
+    private InsertUpdateTrigger insertUpdateTrigger;
 
     public ContactDTO getContactByIdSimple(String id){
         Optional<Contact> contactOptional = contactRepository.findById(id);
@@ -64,10 +67,8 @@ public class ContactService implements EntityService {
 
     public ContactDTO insertContact(Contact contact){
         Contact contactToInsert = new Contact();
+        contactToInsert = insertUpdateTrigger.handleContactEntry(contact, contactToInsert, true);
 
-        contactToInsert = ObjectMapper.mapContactFields(contact, contactToInsert);
-        contactToInsert = relationshipMapper.mapContactParents(contact, contactToInsert, true);
-        
         return contactRepository.save(contactToInsert).toDTOSimple();
     }
 
@@ -101,8 +102,7 @@ public class ContactService implements EntityService {
         }
 
         Contact contactToUpdate = contactOptional.get();
-        contactToUpdate = ObjectMapper.mapContactFields(contact, contactToUpdate);
-        contactToUpdate = relationshipMapper.mapContactParents(contact, contactToUpdate, false);
+        contactToUpdate = insertUpdateTrigger.handleContactEntry(contact, contactToUpdate, false);
         return contactRepository.save(contactToUpdate).toDTOSimple();
     }
 

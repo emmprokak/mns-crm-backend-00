@@ -9,6 +9,7 @@ import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
+import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class OpportunityService implements EntityService {
     private AccountRepository accountRepository;
     @Autowired
     private RelationshipMapper relationshipMapper;
+    @Autowired
+    private InsertUpdateTrigger insertUpdateTrigger;
 
     public OpportunityDTO getOpportunityByIdSimple(String id){
         Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
@@ -63,9 +66,7 @@ public class OpportunityService implements EntityService {
 
     public OpportunityDTO insertOpportunity(Opportunity opportunity){
         Opportunity opptyToInsert = new Opportunity();
-
-        opptyToInsert = ObjectMapper.mapOpportunityFields(opportunity, opptyToInsert);
-        opptyToInsert = relationshipMapper.mapOpportunityParents(opportunity, opptyToInsert, true);
+        opptyToInsert = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToInsert, true);
 
         return opportunityRepository.save(opptyToInsert).toDTOSimple();
     }
@@ -100,8 +101,7 @@ public class OpportunityService implements EntityService {
         }
 
         Opportunity opptyToUpdate = opptyOptional.get();
-        opptyToUpdate = ObjectMapper.mapOpportunityFields(opportunity, opptyToUpdate);
-        opptyToUpdate = relationshipMapper.mapOpportunityParents(opportunity, opptyToUpdate, false);
+        opptyToUpdate = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToUpdate, false);
 
         return opportunityRepository.save(opptyToUpdate).toDTOSimple();
     }
