@@ -1,14 +1,13 @@
-package com.unipi.mns.mnscrm00.triggers;
+package com.unipi.mns.mnscrm00.triggers.delete.entity_deletion;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
-import com.unipi.mns.mnscrm00.dal.LeadRepository;
 import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.triggers.delete.DeletionHandler;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class DeleteTrigger {
+public class AccountDeletionHandler implements DeletionHandler<Account> {
+
     @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
-    private LeadRepository leadRepository;
-    @Autowired
-    private ContactRepository contactRepository;
-    @Autowired
     private OpportunityRepository opportunityRepository;
 
-    public Account handleAccountDelete(Account account){
-        // handle parents
+    @Autowired
+    private ContactRepository contactRepository;
+
+    @Override
+    public Account delete(Account account) {
+        account = handleParentReferences(account);
+        account = handleChildReferences(account);
+        return account;
+    }
+
+    @Override
+    public Account handleParentReferences(Account account){
         if(!StringUtil.stringIsEmptyOrNull(account.getParentId())){
             Optional<Account> parentAccountOptional = accountRepository.findById(account.getParentId());
 
@@ -50,16 +56,17 @@ public class DeleteTrigger {
             accountRepository.save(parentAccountOptional.get());
         }
 
+        return account;
+    }
 
-        // handle children
-
+    @Override
+    public Account handleChildReferences(Account account){
         List<Account> accountList = accountRepository.findByParentId(account.getId());
         for(Account acc : accountList){
             acc.setParent(null);
             acc.setParentId(null);
             accountRepository.save(acc);
         }
-
 
         List<Contact> contactList = contactRepository.findByAccountId(account.getId());
         for(Contact con : contactList){
@@ -75,6 +82,7 @@ public class DeleteTrigger {
             opportunityRepository.save(opp);
         }
 
+        // TODO: add cases when time
 
         return account;
     }

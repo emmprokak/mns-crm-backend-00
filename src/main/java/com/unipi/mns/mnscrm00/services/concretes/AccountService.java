@@ -1,16 +1,13 @@
 package com.unipi.mns.mnscrm00.services.concretes;
 
-import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
-import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
-import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
+import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
+import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,6 +38,8 @@ public class AccountService implements EntityService {
 
     @Autowired
     private RelationshipMapper relationshipMapper;
+    @Autowired
+    private DeleteTrigger deleteTrigger;
 
     public AccountDTO getAccountByIdSimple(String id){
         Optional<Account> accountOptional = accountRepository.findById(id);
@@ -85,13 +84,7 @@ public class AccountService implements EntityService {
         List<Account> accountList = accountRepository.findAll();
 
         if(accountList.size() <= 0){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getListEntityNotFound(
-                            Constants.Entity.ACCOUNT,
-                            Constants.Specifier.ID
-                    )
-            );
+            return new ArrayList<>();
         }
 
         return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
@@ -143,13 +136,7 @@ public class AccountService implements EntityService {
         }
 
         Account accToDelete = accountOptional.get();
-        List<Account> accountList = accountRepository.findByParentId(accToDelete.getId());
-        for(Account acc : accountList){
-            acc.setParent(null);
-            acc.setParentId(null);
-            accountRepository.save(acc);
-        }
-
+        deleteTrigger.handleReferenceDeletion(accToDelete);
         accountRepository.delete(accToDelete);
 
         return true;

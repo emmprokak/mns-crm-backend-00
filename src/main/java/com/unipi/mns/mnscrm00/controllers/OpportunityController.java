@@ -35,7 +35,7 @@ public class OpportunityController {
 
     @GetMapping("/all")
     public List<OpportunityDTO> getOpportunities(){
-        return opportunityService.getAllContacts();
+        return opportunityService.getAllOpportunities();
     }
 
     @PutMapping("/{id}")

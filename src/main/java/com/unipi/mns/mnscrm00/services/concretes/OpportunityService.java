@@ -6,10 +6,10 @@ import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
-import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
-import com.unipi.mns.mnscrm00.triggers.InsertUpdateTrigger;
+import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
+import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,8 @@ public class OpportunityService implements EntityService {
     private RelationshipMapper relationshipMapper;
     @Autowired
     private InsertUpdateTrigger insertUpdateTrigger;
+    @Autowired
+    private DeleteTrigger deleteTrigger;
 
     public OpportunityDTO getOpportunityByIdSimple(String id){
         Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
@@ -71,17 +74,11 @@ public class OpportunityService implements EntityService {
         return opportunityRepository.save(opptyToInsert).toDTOSimple();
     }
 
-    public List<OpportunityDTO> getAllContacts(){
+    public List<OpportunityDTO> getAllOpportunities(){
         List<Opportunity> opptyList = opportunityRepository.findAll();
 
         if(opptyList.size() <= 0){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.OPPORTUNITY,
-                            Constants.Specifier.ID
-                    )
-            );
+            return new ArrayList<>();
         }
 
         return ListConverter.convertOpportunitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
@@ -119,23 +116,7 @@ public class OpportunityService implements EntityService {
             );
         }
 
-        if(opptyOptional.get().getRelatedAccount() != null){
-            Optional<Account> accountOptional = accountRepository.findById(opptyOptional.get().getRelatedAccountId());
-
-            if(!accountOptional.isPresent()){
-                throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST,
-                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                                Constants.Entity.ACCOUNT,
-                                Constants.Specifier.ID
-                        )
-                );
-            }
-
-            accountOptional.get().getOpportunities().remove(opptyOptional.get());
-            accountRepository.save(accountOptional.get());
-        }
-
+        deleteTrigger.handleReferenceDeletion(opptyOptional.get());
         opportunityRepository.delete(opptyOptional.get());
 
         return true;

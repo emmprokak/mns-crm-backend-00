@@ -1,4 +1,4 @@
-package com.unipi.mns.mnscrm00.triggers;
+package com.unipi.mns.mnscrm00.triggers.insert_update;
 
 import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
