@@ -131,4 +131,24 @@ public class ListConverter {
         return dtos;
     }
 
+    public static List<VoiceCallDTO> convertVoiceCallsToDTOList(List<VoiceCall> voiceCalls, int conversionType){
+        List<VoiceCallDTO> dtos = new ArrayList<>();
+
+        switch(conversionType){
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
+                voiceCalls.forEach(vc -> dtos.add(vc.toDTOMinimal()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
+                voiceCalls.forEach(vc -> dtos.add(vc.toDTOSimple()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
+                voiceCalls.forEach(vc -> dtos.add(vc.toDTOComplete()));
+                break;
+            default:
+                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
+        }
+
+        return dtos;
+    }
+
 }

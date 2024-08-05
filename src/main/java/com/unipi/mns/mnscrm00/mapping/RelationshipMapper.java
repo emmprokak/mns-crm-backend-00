@@ -73,6 +73,18 @@ public class RelationshipMapper {
         return caseToBeUpdated;
     }
 
+    public VoiceCall mapVoiceCallParents(VoiceCall reqVoiceCall, VoiceCall voiceCallToBeUpdated, Boolean isInsert){
+        if(!StringUtil.stringsAreEqual(reqVoiceCall.getRelatedAccountId(), voiceCallToBeUpdated.getRelatedAccountId())){
+            voiceCallToBeUpdated = relHandlerHelper.handleVoiceCallParentAccount(reqVoiceCall, voiceCallToBeUpdated, isInsert);
+        }
+
+        if(!StringUtil.stringsAreEqual(reqVoiceCall.getRelatedCaseId(), voiceCallToBeUpdated.getRelatedCaseId())){
+            voiceCallToBeUpdated = relHandlerHelper.handleVoiceCallParentCase(reqVoiceCall, voiceCallToBeUpdated, isInsert);
+        }
+
+        return voiceCallToBeUpdated;
+    }
+
     public List<DataEntity> mapLeadToChildren(Account acc, Contact con, Opportunity opp, Lead lead){
             return relHandlerHelper.handleChildrenParentLead(acc, con, opp, lead);
     }

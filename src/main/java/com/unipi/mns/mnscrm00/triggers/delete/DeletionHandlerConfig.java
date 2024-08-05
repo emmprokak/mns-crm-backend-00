@@ -17,7 +17,8 @@ public class DeletionHandlerConfig {
                                                               OpportunityDeletionHandler opportunityHandler,
                                                               LeadDeletionHandler leadHandler,
                                                               TaskDeletionHandler taskHandler,
-                                                              CaseDeletionHandler caseHandler
+                                                              CaseDeletionHandler caseHandler,
+                                                              VoiceCallDeletionHandler voiceCallHandler
    ) {
         Map<Class<?>, DeletionHandler<?>> handlers = new HashMap<>();
         handlers.put(Account.class, accountHandler);
@@ -26,6 +27,7 @@ public class DeletionHandlerConfig {
         handlers.put(Lead.class, leadHandler);
         handlers.put(Task.class, taskHandler);
         handlers.put(Case.class, caseHandler);
+        handlers.put(VoiceCall.class, voiceCallHandler);
         return handlers;
     }
 }

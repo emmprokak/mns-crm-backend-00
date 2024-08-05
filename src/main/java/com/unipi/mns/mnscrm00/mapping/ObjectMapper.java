@@ -151,6 +151,18 @@ public class ObjectMapper {
         return result;
     }
 
+    public static VoiceCall mapVoiceCallFields (VoiceCall source, VoiceCall target){
+        VoiceCall result = target;
+
+        target.setAgentName(source.getAgentName());
+        target.setCallDate(source.getCallDate());
+        target.setDuration(source.getDuration());
+        target.setCustomerPhone(source.getCustomerPhone());
+        target.setTitle(source.getTitle());
+
+        return result;
+    }
+
     public static Opportunity mapLeadToOpportunity(Lead lead, Opportunity opportunity){
         Opportunity result = opportunity;
 

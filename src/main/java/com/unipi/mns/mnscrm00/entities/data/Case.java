@@ -44,6 +44,9 @@ public class Case implements Sendable<CaseDTO>, DataEntity {
     private List<Task> tasks;
 
     @OneToMany(cascade = CascadeType.ALL)
+    private List<VoiceCall> calls;
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Note> notes;
 
     @Column(name="title")
@@ -101,12 +104,20 @@ public class Case implements Sendable<CaseDTO>, DataEntity {
 
     @Override
     public CaseDTO toDTOComplete() {
-        return new CaseDTOComplete(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, tasks, creationDate, closedDate);
+        return new CaseDTOComplete(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, tasks, creationDate, closedDate, calls);
     }
 
     @Override
     public CaseDTO toDTOMinimal() {
         return new CaseDTOMinimal(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, creationDate, closedDate);
+    }
+
+    public List<VoiceCall> getCalls() {
+        return calls;
+    }
+
+    public void setCalls(List<VoiceCall> calls) {
+        this.calls = calls;
     }
 
     public List<Note> getNotes() {

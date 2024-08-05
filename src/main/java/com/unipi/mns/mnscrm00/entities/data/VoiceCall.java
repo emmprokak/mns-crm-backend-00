@@ -1,13 +1,22 @@
 package com.unipi.mns.mnscrm00.entities.data;
 
+import com.unipi.mns.mnscrm00.dto.abstracts.VoiceCallDTO;
+import com.unipi.mns.mnscrm00.dto.completes.VoiceCallDTOComplete;
+import com.unipi.mns.mnscrm00.dto.minimals.VoiceCallDTOMinimal;
+import com.unipi.mns.mnscrm00.dto.simples.VoiceCallDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name="Voice_Call_ent")
-public class VoiceCall {
+public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -19,6 +28,12 @@ public class VoiceCall {
     @ManyToOne
     @JoinColumn(name = "case_id")
     private Case relatedCase;
+
+    @Column(name="account_id_txt")
+    private String relatedAccountId;
+
+    @Column(name="case_id_txt")
+    private String relatedCaseId;
 
     @Column(name="title")
     private String title;
@@ -35,6 +50,13 @@ public class VoiceCall {
     @Column(name="duration")
     private int duration;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
     public VoiceCall(String agentName, Date callDate, String customerPhone, int duration, String id, Account relatedAccount, Case relatedCase, String title) {
         this.agentName = agentName;
         this.callDate = callDate;
@@ -47,6 +69,53 @@ public class VoiceCall {
     }
 
     public VoiceCall() {}
+
+    @Override
+    public VoiceCallDTO toDTOSimple() {
+        return new VoiceCallDTOSimple(agentName, callDate, customerPhone, duration, id, relatedAccount, relatedCase, title, created, modified);
+    }
+
+    @Override
+    public VoiceCallDTO toDTOComplete() {
+        return new VoiceCallDTOComplete(agentName, callDate, customerPhone, duration, id, relatedAccount, relatedCase, title, created, modified);
+    }
+
+    @Override
+    public VoiceCallDTO toDTOMinimal() {
+        return new VoiceCallDTOMinimal(agentName, callDate, customerPhone, duration, id, relatedAccount, relatedCase, title, created, modified);
+    }
+
+    public String getRelatedAccountId() {
+        return relatedAccountId;
+    }
+
+    public void setRelatedAccountId(String relatedAccountId) {
+        this.relatedAccountId = relatedAccountId;
+    }
+
+    public String getRelatedCaseId() {
+        return relatedCaseId;
+    }
+
+    public void setRelatedCaseId(String relatedCaseId) {
+        this.relatedCaseId = relatedCaseId;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
 
     public String getAgentName() {
         return agentName;

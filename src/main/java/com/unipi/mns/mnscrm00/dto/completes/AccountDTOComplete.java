@@ -1,10 +1,7 @@
 package com.unipi.mns.mnscrm00.dto.completes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
-import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
-import com.unipi.mns.mnscrm00.dto.abstracts.CaseDTO;
-import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
-import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
+import com.unipi.mns.mnscrm00.dto.abstracts.*;
 import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
 import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.exceptions.ListConversionException;
@@ -17,7 +14,7 @@ public class AccountDTOComplete extends AccountDTOSimple {
     private List<AccountDTO> children;
     private List<ContactDTO> contacts;
     private List<CaseDTO> cases;
-    private List<VoiceCall> calls;
+    private List<VoiceCallDTO> calls;
     private List<OpportunityDTO> opportunities;
 
     public AccountDTOComplete(){
@@ -29,7 +26,7 @@ public class AccountDTOComplete extends AccountDTOSimple {
         this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.cases = ListConverter.convertCasesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);// TODO: convert all to minimal
-        this.calls = calls;
+        this.calls = ListConverter.convertVoiceCallsToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.opportunities = ListConverter.convertOpportunitiesToDTOList(opportunities, Constants.DTO.CONVERT_TO_DTO_MINIMAL);;
     }
 
@@ -41,11 +38,11 @@ public class AccountDTOComplete extends AccountDTOSimple {
         this.opportunities = opportunities;
     }
 
-    public List<VoiceCall> getCalls() {
+    public List<VoiceCallDTO> getCalls() {
         return calls;
     }
 
-    public void setCalls(List<VoiceCall> calls) {
+    public void setCalls(List<VoiceCallDTO> calls) {
         this.calls = calls;
     }
 

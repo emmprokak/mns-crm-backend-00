@@ -52,4 +52,11 @@ public class InsertUpdateTrigger {
 
         return target;
     }
+
+    public VoiceCall handleVoiceCallEntry(VoiceCall source, VoiceCall target, boolean isInsert){
+        target = ObjectMapper.mapVoiceCallFields(source, target);
+        target = relationshipMapper.mapVoiceCallParents(source, target, isInsert);
+
+        return target;
+    }
 }

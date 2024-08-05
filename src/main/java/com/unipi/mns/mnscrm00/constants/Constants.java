@@ -20,10 +20,11 @@ public class Constants {
 
     public static class Entity {
         public final static String ACCOUNT = "Account";
-        public final static String CONTACT = "Contat";
+        public final static String CONTACT = "Contact";
         public final static String LEAD = "Lead";
         public final static String OPPORTUNITY = "Opportunity";
         public final static String CASE = "Case";
+        public final static String VOICE_CALL = "VoiceCall";
         public final static String NOTE = "NOTE";
         public final static String TASK = "TASK";
     }

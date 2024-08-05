@@ -28,6 +28,8 @@ public class RelationshipHandlerHelper {
     private LeadRepository leadRepository;
     @Autowired
     private CaseRepository caseRepository;
+    @Autowired
+    private VoiceCallRepository voiceCallRepository;
 
 
     public Account handleAccountParentLead(Account reqAccount, Account accToBeUpdated) {
@@ -166,7 +168,7 @@ public class RelationshipHandlerHelper {
     }
 
     public Task handleTaskParentLead(Task reqTask, Task taskToBeUpdated, Boolean isInsert) {
-        if ((reqTask.getRelatedLeadId() == null || reqTask.getRelatedLeadId().isBlank()) && reqTask.getRelatedLeadId() != null) {
+        if ((reqTask.getRelatedLeadId() == null || reqTask.getRelatedLeadId().isBlank()) && taskToBeUpdated.getRelatedLeadId() != null) {
             String parentLeadId = taskToBeUpdated.getRelatedLeadId();
 
             taskToBeUpdated.setRelatedLeadId(null);
@@ -217,7 +219,7 @@ public class RelationshipHandlerHelper {
     }
 
     public Task handleTaskParentOpportunity(Task reqTask, Task taskToBeUpdated, Boolean isInsert) {
-        if ((reqTask.getRelatedOpportunityId() == null || reqTask.getRelatedOpportunityId().isBlank()) && reqTask.getRelatedOpportunityId() != null) {
+        if ((reqTask.getRelatedOpportunityId() == null || reqTask.getRelatedOpportunityId().isBlank()) && taskToBeUpdated.getRelatedOpportunityId() != null) {
             String parentOpportunityId = taskToBeUpdated.getRelatedOpportunityId();
 
             taskToBeUpdated.setRelatedOpportunityId(null);
@@ -369,6 +371,107 @@ public class RelationshipHandlerHelper {
         foundParentContact.getCases().add(caseToBeUpdated);
         contactRepository.save(foundParentContact);
         return caseToBeUpdated;
+    }
+
+    public VoiceCall handleVoiceCallParentAccount(VoiceCall reqVoiceCall, VoiceCall voiceCallToBeUpdated, Boolean isInsert) {
+        if ((reqVoiceCall.getRelatedAccountId() == null || reqVoiceCall.getRelatedAccountId().isBlank()) && voiceCallToBeUpdated.getRelatedAccountId() != null) {
+            String parentAccountId = voiceCallToBeUpdated.getRelatedAccountId();
+
+            voiceCallToBeUpdated.setRelatedAccount(null);
+            voiceCallToBeUpdated.setRelatedAccountId(null);
+
+            Optional<Account> parentAccountOptional = accountRepository.findById(parentAccountId);
+
+            if (!parentAccountOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.ACCOUNT,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentAccountOptional.get().getCalls().remove(voiceCallToBeUpdated);
+            accountRepository.save(parentAccountOptional.get());
+            return voiceCallToBeUpdated;
+        }
+
+        Optional<Account> parentAccountOptional = accountRepository.findById(reqVoiceCall.getRelatedAccountId());
+
+        if (!parentAccountOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Account foundParentAccount = parentAccountOptional.get();
+        voiceCallToBeUpdated.setRelatedAccountId(foundParentAccount.getId());
+        voiceCallToBeUpdated.setRelatedAccount(foundParentAccount);
+
+        if(isInsert){
+            voiceCallRepository.save(voiceCallToBeUpdated);
+        }
+
+        foundParentAccount.getCalls().add(voiceCallToBeUpdated);
+        accountRepository.save(foundParentAccount);
+        return voiceCallToBeUpdated;
+    }
+
+    public VoiceCall handleVoiceCallParentCase(VoiceCall reqVoiceCall, VoiceCall voiceCallToBeUpdated, Boolean isInsert) {
+        if ((reqVoiceCall.getRelatedCaseId() == null || reqVoiceCall.getRelatedCaseId().isBlank()) && voiceCallToBeUpdated.getRelatedCaseId() != null) {
+            String parentCaseId = voiceCallToBeUpdated.getRelatedCaseId();
+
+            voiceCallToBeUpdated.setRelatedCase(null);
+            voiceCallToBeUpdated.setRelatedCaseId(null);
+
+            Optional<Case> parentCaseOptional = caseRepository.findById(parentCaseId);
+
+            if (!parentCaseOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.CASE,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentCaseOptional.get().getCalls().remove(voiceCallToBeUpdated);
+            caseRepository.save(parentCaseOptional.get());
+
+            return voiceCallToBeUpdated;
+        }
+
+        Optional<Case> parentCaseOptional = caseRepository.findById(reqVoiceCall.getRelatedCaseId());
+
+        if (!parentCaseOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CASE,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Case foundParentCase = parentCaseOptional.get();
+        voiceCallToBeUpdated.setRelatedCaseId(foundParentCase.getId());
+        voiceCallToBeUpdated.setRelatedCase(foundParentCase);
+
+        if(isInsert){
+            voiceCallRepository.save(voiceCallToBeUpdated);
+        }
+
+        foundParentCase.getCalls().add(voiceCallToBeUpdated);
+        caseRepository.save(foundParentCase);
+        return voiceCallToBeUpdated;
     }
 
     public List<DataEntity> handleChildrenParentLead(Account acc, Contact con, Opportunity opp, Lead lead){
