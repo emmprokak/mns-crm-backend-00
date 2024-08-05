@@ -26,6 +26,8 @@ public class RelationshipHandlerHelper {
     private TaskRepository taskRepository;
     @Autowired
     private LeadRepository leadRepository;
+    @Autowired
+    private CaseRepository caseRepository;
 
 
     public Account handleAccountParentLead(Account reqAccount, Account accToBeUpdated) {
@@ -263,6 +265,110 @@ public class RelationshipHandlerHelper {
         foundParentOpportunity.getTasks().add(taskToBeUpdated);
         opportunityRepository.save(foundParentOpportunity);
         return taskToBeUpdated;
+    }
+
+    public Case handleCaseParentAccount(Case reqCase, Case caseToBeUpdated, Boolean isInsert) {
+        if ((reqCase.getRelatedAccountId() == null || reqCase.getRelatedAccountId().isBlank()) && caseToBeUpdated.getRelatedAccountId() != null) {
+            String parentAccountId = caseToBeUpdated.getRelatedAccountId();
+
+            caseToBeUpdated.setRelatedAccountId(null);
+            caseToBeUpdated.setRelatedAccount(null);
+
+            Optional<Account> parentAccountOptional = accountRepository.findById(parentAccountId);
+
+            if (!parentAccountOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.ACCOUNT,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentAccountOptional.get().getCases().remove(caseToBeUpdated);
+            accountRepository.save(parentAccountOptional.get());
+
+
+            return caseToBeUpdated;
+        }
+
+        Optional<Account> parentAccountOptional = accountRepository.findById(reqCase.getRelatedAccountId());
+
+        if (!parentAccountOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.ACCOUNT,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Account foundParentAccount = parentAccountOptional.get();
+        caseToBeUpdated.setRelatedAccountId(foundParentAccount.getId());
+        caseToBeUpdated.setRelatedAccount(foundParentAccount);
+
+        if(isInsert){
+            caseRepository.save(caseToBeUpdated);
+        }
+
+        foundParentAccount.getCases().add(caseToBeUpdated);
+        accountRepository.save(foundParentAccount);
+        return caseToBeUpdated;
+    }
+
+    public Case handleCaseParentContact(Case reqCase, Case caseToBeUpdated, Boolean isInsert) {
+        if ((reqCase.getRelatedContactId() == null || reqCase.getRelatedContactId().isBlank()) && caseToBeUpdated.getRelatedContactId() != null) {
+            String parentContactId = caseToBeUpdated.getRelatedContactId();
+
+            caseToBeUpdated.setRelatedContactId(null);
+            caseToBeUpdated.setRelatedContact(null);
+
+            Optional<Contact> parentContactOptional = contactRepository.findById(parentContactId);
+
+            if (!parentContactOptional.isPresent()) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                                Constants.Entity.CONTACT,
+                                Constants.Specifier.ID
+                        )
+                );
+            }
+
+
+            parentContactOptional.get().getCases().remove(caseToBeUpdated);
+            contactRepository.save(parentContactOptional.get());
+
+
+            return caseToBeUpdated;
+        }
+
+        Optional<Contact> parentContactOptional = contactRepository.findById(reqCase.getRelatedContactId());
+
+        if (!parentContactOptional.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
+                            Constants.Entity.CONTACT,
+                            Constants.Specifier.ID
+                    )
+            );
+        }
+
+        Contact foundParentContact = parentContactOptional.get();
+        caseToBeUpdated.setRelatedContactId(foundParentContact.getId());
+        caseToBeUpdated.setRelatedContact(foundParentContact);
+
+        if(isInsert){
+            caseRepository.save(caseToBeUpdated);
+        }
+
+        foundParentContact.getCases().add(caseToBeUpdated);
+        contactRepository.save(foundParentContact);
+        return caseToBeUpdated;
     }
 
     public List<DataEntity> handleChildrenParentLead(Account acc, Contact con, Opportunity opp, Lead lead){

@@ -26,7 +26,7 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<Case> cases;
 
     @Column(name="first_name")

@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.dto.completes;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
+import com.unipi.mns.mnscrm00.dto.abstracts.CaseDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
@@ -15,7 +16,7 @@ import java.util.List;
 public class AccountDTOComplete extends AccountDTOSimple {
     private List<AccountDTO> children;
     private List<ContactDTO> contacts;
-    private List<Case> cases;
+    private List<CaseDTO> cases;
     private List<VoiceCall> calls;
     private List<OpportunityDTO> opportunities;
 
@@ -27,7 +28,7 @@ public class AccountDTOComplete extends AccountDTOSimple {
         super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
         this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.cases = cases; // TODO: convert all to minimal
+        this.cases = ListConverter.convertCasesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);// TODO: convert all to minimal
         this.calls = calls;
         this.opportunities = ListConverter.convertOpportunitiesToDTOList(opportunities, Constants.DTO.CONVERT_TO_DTO_MINIMAL);;
     }
@@ -48,11 +49,11 @@ public class AccountDTOComplete extends AccountDTOSimple {
         this.calls = calls;
     }
 
-    public List<Case> getCases() {
+    public List<CaseDTO> getCases() {
         return cases;
     }
 
-    public void setCases(List<Case> cases) {
+    public void setCases(List<CaseDTO> cases) {
         this.cases = cases;
     }
 

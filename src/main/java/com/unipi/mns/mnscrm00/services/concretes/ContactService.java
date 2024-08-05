@@ -27,11 +27,6 @@ public class ContactService implements EntityService {
     @Autowired
     private ContactRepository contactRepository;
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private RelationshipMapper relationshipMapper;
-    @Autowired
     private InsertUpdateTrigger insertUpdateTrigger;
     @Autowired
     private DeleteTrigger deleteTrigger;

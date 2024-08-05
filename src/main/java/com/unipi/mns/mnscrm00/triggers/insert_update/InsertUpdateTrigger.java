@@ -45,4 +45,11 @@ public class InsertUpdateTrigger {
 
         return target;
     }
+
+    public Case handleCaseEntry(Case source, Case target, boolean isInsert){
+        target = ObjectMapper.mapCaseFields(source, target, isInsert);
+        target = relationshipMapper.mapCaseParents(source, target, isInsert);
+
+        return target;
+    }
 }

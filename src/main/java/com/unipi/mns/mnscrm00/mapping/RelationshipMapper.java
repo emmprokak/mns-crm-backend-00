@@ -61,6 +61,18 @@ public class RelationshipMapper {
         return taskToBeUpdated;
     }
 
+    public Case mapCaseParents(Case reqCase, Case caseToBeUpdated, Boolean isInsert){
+        if(!StringUtil.stringsAreEqual(reqCase.getRelatedAccountId(), caseToBeUpdated.getRelatedAccountId())){
+            caseToBeUpdated = relHandlerHelper.handleCaseParentAccount(reqCase, caseToBeUpdated, isInsert);
+        }
+
+        if(!StringUtil.stringsAreEqual(reqCase.getRelatedContactId(), caseToBeUpdated.getRelatedContactId())){
+            caseToBeUpdated = relHandlerHelper.handleCaseParentContact(reqCase, caseToBeUpdated, isInsert);
+        }
+
+        return caseToBeUpdated;
+    }
+
     public List<DataEntity> mapLeadToChildren(Account acc, Contact con, Opportunity opp, Lead lead){
             return relHandlerHelper.handleChildrenParentLead(acc, con, opp, lead);
     }

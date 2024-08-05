@@ -1,14 +1,23 @@
 package com.unipi.mns.mnscrm00.entities.data;
 
+import com.unipi.mns.mnscrm00.dto.abstracts.CaseDTO;
+import com.unipi.mns.mnscrm00.dto.completes.CaseDTOComplete;
+import com.unipi.mns.mnscrm00.dto.minimals.CaseDTOMinimal;
+import com.unipi.mns.mnscrm00.dto.simples.CaseDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="Case_ent")
-public class Case {
+public class Case implements Sendable<CaseDTO>, DataEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -20,6 +29,12 @@ public class Case {
     @ManyToOne
     @JoinColumn(name = "contact_id")
     private Contact relatedContact;
+
+    @Column(name = "account_id_txt")
+    private String relatedAccountId;
+
+    @Column(name = "contact_id_txt")
+    private String relatedContactId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -55,6 +70,13 @@ public class Case {
     @Column(name="closed_date")
     private Date closedDate;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
     public Case(User caseResponsible, String category, Date closedDate, Date creationDate, String id, String reason, Account relatedAccount, Contact relatedContact, String severity, String source, String status, String title) {
         this.caseResponsible = caseResponsible;
         this.category = category;
@@ -72,6 +94,21 @@ public class Case {
 
     public Case() {}
 
+    @Override
+    public CaseDTO toDTOSimple() {
+        return new CaseDTOSimple(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, creationDate, closedDate);
+    }
+
+    @Override
+    public CaseDTO toDTOComplete() {
+        return new CaseDTOComplete(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, tasks, creationDate, closedDate);
+    }
+
+    @Override
+    public CaseDTO toDTOMinimal() {
+        return new CaseDTOMinimal(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, creationDate, closedDate);
+    }
+
     public List<Note> getNotes() {
         return notes;
     }
@@ -86,6 +123,22 @@ public class Case {
 
     public void setCaseResponsible(User caseResponsible) {
         this.caseResponsible = caseResponsible;
+    }
+
+    public String getRelatedAccountId() {
+        return relatedAccountId;
+    }
+
+    public void setRelatedAccountId(String relatedAccountId) {
+        this.relatedAccountId = relatedAccountId;
+    }
+
+    public String getRelatedContactId() {
+        return relatedContactId;
+    }
+
+    public void setRelatedContactId(String relatedContactId) {
+        this.relatedContactId = relatedContactId;
     }
 
     public String getCategory() {

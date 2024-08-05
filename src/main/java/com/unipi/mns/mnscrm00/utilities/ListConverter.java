@@ -111,6 +111,24 @@ public class ListConverter {
         return dtos;
     }
 
+    public static List<CaseDTO> convertCasesToDTOList(List<Case> cases, int conversionType){
+        List<CaseDTO> dtos = new ArrayList<>();
 
+        switch(conversionType){
+            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
+                cases.forEach(c -> dtos.add(c.toDTOMinimal()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
+                cases.forEach(c -> dtos.add(c.toDTOSimple()));
+                break;
+            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
+                cases.forEach(c -> dtos.add(c.toDTOComplete()));
+                break;
+            default:
+                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
+        }
+
+        return dtos;
+    }
 
 }

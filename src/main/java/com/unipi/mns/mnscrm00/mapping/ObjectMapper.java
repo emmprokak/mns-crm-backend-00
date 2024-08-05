@@ -1,7 +1,10 @@
 package com.unipi.mns.mnscrm00.mapping;
 
 import com.unipi.mns.mnscrm00.entities.data.*;
+import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -86,6 +89,29 @@ public class ObjectMapper {
         result.setReason(source.getReason());
         result.setStatus(source.getStatus());
         result.setType(source.getType());
+
+        return result;
+    }
+
+    public static Case mapCaseFields(Case source, Case target, Boolean isInsert){
+        Case result = target;
+
+        result.setCategory(source.getCategory());
+        result.setReason(source.getReason());
+        result.setStatus(source.getStatus());
+        result.setSeverity(source.getSeverity());
+        result.setSource(source.getSource());
+        result.setTitle(source.getTitle());
+
+        if(isInsert){
+            result.setCreationDate(Date.valueOf(LocalDate.now()));
+        }
+
+        if(!isInsert &&
+                StringUtil.stringsAreEqual(source.getStatus(), "Closed") &&
+                !StringUtil.stringsAreEqual(target.getStatus(), "Closed")){
+            result.setClosedDate(Date.valueOf(LocalDate.now()));
+        }
 
         return result;
     }
