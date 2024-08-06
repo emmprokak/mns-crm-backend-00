@@ -25,8 +25,8 @@ public class Constants {
         public final static String OPPORTUNITY = "Opportunity";
         public final static String CASE = "Case";
         public final static String VOICE_CALL = "VoiceCall";
-        public final static String NOTE = "NOTE";
-        public final static String TASK = "TASK";
+        public final static String TASK = "Task";
+        public final static String CONFIG = "Configuration element";
     }
 
     public static class Specifier {

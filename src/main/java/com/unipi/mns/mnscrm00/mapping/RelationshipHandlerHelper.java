@@ -85,8 +85,6 @@ public class RelationshipHandlerHelper {
 
             parentAccountOptional.get().getContacts().remove(conToBeUpdated);
             accountRepository.save(parentAccountOptional.get());
-
-
             return conToBeUpdated;
         }
 
