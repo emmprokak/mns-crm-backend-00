@@ -44,7 +44,7 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Account> children = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToMany(orphanRemoval = false)
     List<Contact> contacts;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
