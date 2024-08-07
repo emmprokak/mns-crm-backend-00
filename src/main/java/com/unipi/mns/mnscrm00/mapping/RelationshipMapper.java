@@ -89,4 +89,8 @@ public class RelationshipMapper {
             return relHandlerHelper.handleChildrenParentLead(acc, con, opp, lead);
     }
 
+    public List<DataEntity> mapLeadConversionChildrenRelationships(Account acc, Contact con, Opportunity opp){
+        return relHandlerHelper.handleLeadConversionChildrenRelationships(acc, con, opp);
+    }
+
 }

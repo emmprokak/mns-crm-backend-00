@@ -45,7 +45,7 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     private List<Account> children = new ArrayList<>();
 
     @OneToMany(orphanRemoval = false)
-    List<Contact> contacts;
+    List<Contact> contacts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
     List<Case> cases;
@@ -54,7 +54,7 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     List<VoiceCall> calls;
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
-    List<Opportunity> opportunities;
+    List<Opportunity> opportunities = new ArrayList<>();
 
     @Column(name="company_name")
     private String companyName;

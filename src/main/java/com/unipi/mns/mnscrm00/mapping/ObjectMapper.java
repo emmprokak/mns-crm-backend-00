@@ -147,7 +147,16 @@ public class ObjectMapper {
         result.setPhone(lead.getContactPhone());
         result.setEmail(lead.getContactEmail());
         result.setPrefix(lead.getContactPrefix());
+        result.setActive(true);
 
+        return result;
+    }
+
+    public static Opportunity mapLeadToOpportunity(Lead lead, Opportunity opportunity){
+        Opportunity result = opportunity;
+
+        result.setStatus("New");
+        result.setTitle(lead.getCompanyName() + " " + "Opportunity");
         return result;
     }
 
@@ -159,15 +168,6 @@ public class ObjectMapper {
         target.setDuration(source.getDuration());
         target.setCustomerPhone(source.getCustomerPhone());
         target.setTitle(source.getTitle());
-
-        return result;
-    }
-
-    public static Opportunity mapLeadToOpportunity(Lead lead, Opportunity opportunity){
-        Opportunity result = opportunity;
-
-        result.setStatus("new");
-        result.setTitle(lead.getCompanyName() + " " + "Opp 1");
 
         return result;
     }

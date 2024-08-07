@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dal.LeadRepository;
+import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.EntityDTO;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.data.Account;
@@ -13,6 +14,7 @@ import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -37,7 +39,10 @@ public class BusinessProcess {
 
     @Autowired
     RelationshipMapper relationshipMapper;
+    @Autowired
+    private OpportunityRepository opportunityRepository;
 
+    @Transactional
     public List<EntityDTO> leadConversion(String leadId) {
 
         Optional<Lead> leadOptional = leadRepository.findById(leadId);
@@ -56,14 +61,19 @@ public class BusinessProcess {
 
         Account acc = new Account();
         acc = ObjectMapper.mapLeadToAccount(inputLead, acc);
-
         Contact con = new Contact();
         con = ObjectMapper.mapLeadToContact(inputLead, con);
-
         Opportunity opp = new Opportunity();
         opp = ObjectMapper.mapLeadToOpportunity(inputLead, opp);
 
         relationshipMapper.mapLeadToChildren(acc, con, opp, inputLead);
+
+        acc = accountRepository.save(acc);
+
+        relationshipMapper.mapLeadConversionChildrenRelationships(acc, con, opp);
+
+        contactRepository.save(con);
+        opportunityRepository.save(opp);
 
         return Arrays.asList(acc.toDTOSimple(), con.toDTOSimple(), opp.toDTOSimple());
     }
