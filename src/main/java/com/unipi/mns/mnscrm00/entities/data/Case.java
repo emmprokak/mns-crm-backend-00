@@ -46,9 +46,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity {
     @OneToMany(cascade = CascadeType.ALL)
     private List<VoiceCall> calls;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Note> notes;
-
     @Column(name="title")
     private String title;
 
@@ -118,10 +115,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity {
 
     public void setCalls(List<VoiceCall> calls) {
         this.calls = calls;
-    }
-
-    public List<Note> getNotes() {
-        return notes;
     }
 
     public List<Task> getTasks() {

@@ -1,6 +1,5 @@
 package com.unipi.mns.mnscrm00.dto.abstracts;
 
-import com.unipi.mns.mnscrm00.entities.data.Note;
 import com.unipi.mns.mnscrm00.entities.data.Task;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -29,9 +29,6 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Task> tasks;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Note> notes;
-
     @Column(name="title")
     private String title;
 
@@ -70,16 +67,12 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
 
     @Override
     public OpportunityDTO toDTOComplete() {
-        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, tasks, notes);
+        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, tasks);
     }
 
     @Override
     public OpportunityDTO toDTOMinimal() {
         return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
-    }
-
-    public List<Note> getNotes() {
-        return notes;
     }
 
     public List<Task> getTasks() {

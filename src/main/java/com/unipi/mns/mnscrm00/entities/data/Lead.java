@@ -24,9 +24,6 @@ public class Lead implements Sendable<LeadDTO>{
     @OneToMany(cascade = CascadeType.ALL)
     private List<Task> tasks;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Note> notes;
-
     @Column(name="company_name")
     private String companyName;
 
@@ -89,16 +86,12 @@ public class Lead implements Sendable<LeadDTO>{
 
     @Override
     public LeadDTO toDTOComplete() {
-        return new LeadDTOComplete(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, notes, tasks, created, modified);
+        return new LeadDTOComplete(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, tasks, created, modified);
     }
 
     @Override
     public LeadDTO toDTOMinimal() {
         return new LeadDTOMinimal(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
-    }
-
-    public List<Note> getNotes() {
-        return notes;
     }
 
     public List<Task> getTasks() {
