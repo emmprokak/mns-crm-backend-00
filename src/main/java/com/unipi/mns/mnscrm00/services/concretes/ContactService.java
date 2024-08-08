@@ -31,7 +31,7 @@ public class ContactService implements EntityService {
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public ContactDTO getContactByIdSimple(String id){
+    public ContactDTO getContactById(String id, boolean getChildrenRelationships){
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
@@ -42,25 +42,13 @@ public class ContactService implements EntityService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(getChildrenRelationships){
+            return contactOptional.get().toDTOComplete();
         }
 
         return contactOptional.get().toDTOSimple();
-    }
-
-    public ContactDTO getContactByIdComplete(String id){
-        Optional<Contact> contactOptional = contactRepository.findById(id);
-
-        if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CONTACT,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        return contactOptional.get().toDTOComplete();
     }
 
     public ContactDTO insertContact(Contact contact){

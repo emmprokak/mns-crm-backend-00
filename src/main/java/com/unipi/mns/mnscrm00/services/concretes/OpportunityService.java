@@ -27,15 +27,11 @@ public class OpportunityService implements EntityService {
     @Autowired
     private OpportunityRepository opportunityRepository;
     @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private RelationshipMapper relationshipMapper;
-    @Autowired
     private InsertUpdateTrigger insertUpdateTrigger;
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public OpportunityDTO getOpportunityByIdSimple(String id){
+    public OpportunityDTO getOpportunityById(String id, boolean getChildrenRelationships){
         Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
 
         if(!opptyOptional.isPresent()){
@@ -48,23 +44,11 @@ public class OpportunityService implements EntityService {
             );
         }
 
-        return opptyOptional.get().toDTOSimple();
-    }
-
-    public OpportunityDTO getOpportunityByIdComplete(String id){
-        Optional<Opportunity> contactOptional = opportunityRepository.findById(id);
-
-        if(!contactOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.OPPORTUNITY,
-                            Constants.Specifier.ID
-                    )
-            );
+        if(getChildrenRelationships){
+            return opptyOptional.get().toDTOComplete();
         }
 
-        return contactOptional.get().toDTOComplete();
+        return opptyOptional.get().toDTOSimple();
     }
 
     public OpportunityDTO insertOpportunity(Opportunity opportunity){

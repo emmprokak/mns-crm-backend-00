@@ -17,12 +17,12 @@ public class TaskController {
 
     @GetMapping("/{id}")
     public TaskDTO getTask(@PathVariable String id){
-        return taskService.getTaskByIdSimple(id);
+        return taskService.getTaskById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public TaskDTO getTaskWithRels(@PathVariable String id){
-        return taskService.getTaskByIdComplete(id);
+        return taskService.getTaskById(id, true);
     }
 
     @PostMapping("/new")

@@ -17,12 +17,12 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public AccountDTO getAccount(@PathVariable String id){
-       return accountService.getAccountByIdSimple(id);
+       return accountService.getAccountById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public AccountDTO getAccountWithRels(@PathVariable String id){
-        return accountService.getAccountByIdComplete(id);
+        return accountService.getAccountById(id, true);
     }
 
     @PostMapping("/new")

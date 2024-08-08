@@ -20,12 +20,12 @@ public class LeadController {
 
     @GetMapping("/{id}")
     public LeadDTO getLead(@PathVariable String id){
-        return leadService.getLeadByIdSimple(id);
+        return leadService.getLeadById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public LeadDTO getLeadWithRels(@PathVariable String id){
-        return leadService.getLeadByIdComplete(id);
+        return leadService.getLeadById(id, true);
     }
 
     @PostMapping("/new")

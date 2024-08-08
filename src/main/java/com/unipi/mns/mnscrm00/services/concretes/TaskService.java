@@ -29,7 +29,7 @@ public class TaskService {
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public TaskDTO getTaskByIdSimple(String id){
+    public TaskDTO getTaskById(String id, boolean getChildrenRelationships){
         Optional<Task> taskOptional = taskRepository.findById(id);
 
         if(!taskOptional.isPresent()){
@@ -40,25 +40,13 @@ public class TaskService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(getChildrenRelationships){
+            return taskOptional.get().toDTOComplete();
         }
 
         return taskOptional.get().toDTOSimple();
-    }
-
-    public TaskDTO getTaskByIdComplete(String id){
-        Optional<Task> taskOptional = taskRepository.findById(id);
-
-        if(!taskOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.TASK,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        return taskOptional.get().toDTOComplete();
     }
 
     public TaskDTO insertTask(Task task){

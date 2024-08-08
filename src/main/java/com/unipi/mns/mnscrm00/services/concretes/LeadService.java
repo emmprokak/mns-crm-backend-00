@@ -29,7 +29,7 @@ public class LeadService implements EntityService {
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public LeadDTO getLeadByIdSimple(String id){
+    public LeadDTO getLeadById(String id, boolean getChildrenRelationships){
         Optional<Lead> leadOptional = leadRepository.findById(id);
 
         if(!leadOptional.isPresent()){
@@ -40,25 +40,13 @@ public class LeadService implements EntityService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(getChildrenRelationships){
+            return leadOptional.get().toDTOComplete();
         }
 
         return leadOptional.get().toDTOSimple();
-    }
-
-    public LeadDTO getLeadByIdComplete(String id){
-        Optional<Lead> leadOptional = leadRepository.findById(id);
-
-        if(!leadOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.LEAD,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        return leadOptional.get().toDTOComplete();
     }
 
     public LeadDTO insertLead(Lead lead){

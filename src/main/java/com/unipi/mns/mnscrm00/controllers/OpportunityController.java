@@ -20,12 +20,12 @@ public class OpportunityController {
 
     @GetMapping("/{id}")
     public OpportunityDTO getOpportunity(@PathVariable String id){
-        return opportunityService.getOpportunityByIdSimple(id);
+        return opportunityService.getOpportunityById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public OpportunityDTO getOpportunityWithRels(@PathVariable String id){
-        return opportunityService.getOpportunityByIdComplete(id);
+        return opportunityService.getOpportunityById(id, true);
     }
 
     @PostMapping("/new")

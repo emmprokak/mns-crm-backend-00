@@ -29,7 +29,7 @@ public class CaseService implements EntityService {
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public CaseDTO getCaseByIdSimple(String id){
+    public CaseDTO getCaseById(String id, boolean getChildrenRelationships){
         Optional<Case> caseOptional = caseRepository.findById(id);
 
         if(!caseOptional.isPresent()){
@@ -40,25 +40,13 @@ public class CaseService implements EntityService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(getChildrenRelationships){
+            return caseOptional.get().toDTOComplete();
         }
 
         return caseOptional.get().toDTOSimple();
-    }
-
-    public CaseDTO getCaseByIdComplete(String id){
-        Optional<Case> caseOptional = caseRepository.findById(id);
-
-        if(!caseOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.CASE,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        return caseOptional.get().toDTOComplete();
     }
 
     public CaseDTO insertCase(Case caseEntry){

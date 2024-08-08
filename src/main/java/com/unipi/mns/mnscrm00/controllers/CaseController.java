@@ -17,12 +17,12 @@ public class CaseController {
 
     @GetMapping("/{id}")
     public CaseDTO getCaseById(@PathVariable String id){
-        return caseService.getCaseByIdSimple(id);
+        return caseService.getCaseById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public CaseDTO getCaseWithRels(@PathVariable String id){
-        return caseService.getCaseByIdComplete(id);
+        return caseService.getCaseById(id, true);
     }
 
     @PostMapping("/new")

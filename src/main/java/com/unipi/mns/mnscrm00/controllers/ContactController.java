@@ -17,12 +17,12 @@ public class ContactController {
 
     @GetMapping("/{id}")
     public ContactDTO getContact(@PathVariable String id){
-        return contactService.getContactByIdSimple(id);
+        return contactService.getContactById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public ContactDTO getContactWithRels(@PathVariable String id){
-        return contactService.getContactByIdComplete(id);
+        return contactService.getContactById(id, true);
     }
 
     @PostMapping("/new")

@@ -23,13 +23,11 @@ public class VoiceCallService {
     @Autowired
     private VoiceCallRepository voiceCallRepository;
     @Autowired
-    private RelationshipMapper relationshipMapper;
-    @Autowired
     private InsertUpdateTrigger insertUpdateTrigger;
     @Autowired
     private DeleteTrigger deleteTrigger;
 
-    public VoiceCallDTO getVoiceCallByIdSimple(String id){
+    public VoiceCallDTO getVoiceCallById(String id, boolean getChildrenRelationships){
         Optional<VoiceCall> voiceCallOptional = voiceCallRepository.findById(id);
 
         if(!voiceCallOptional.isPresent()){
@@ -40,25 +38,13 @@ public class VoiceCallService {
                             Constants.Specifier.ID
                     )
             );
+        }
+
+        if(getChildrenRelationships){
+            return voiceCallOptional.get().toDTOComplete();
         }
 
         return voiceCallOptional.get().toDTOSimple();
-    }
-
-    public VoiceCallDTO getVoiceCallByIdComplete(String id){
-        Optional<VoiceCall> voiceCallOptional = voiceCallRepository.findById(id);
-
-        if(!voiceCallOptional.isPresent()){
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorMessageUtility.getEntityNotFoundBySpecifier(
-                            Constants.Entity.VOICE_CALL,
-                            Constants.Specifier.ID
-                    )
-            );
-        }
-
-        return voiceCallOptional.get().toDTOComplete();
     }
 
     public VoiceCallDTO insertVoiceCall(VoiceCall voiceCall){

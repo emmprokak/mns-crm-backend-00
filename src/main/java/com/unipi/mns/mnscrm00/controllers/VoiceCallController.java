@@ -18,12 +18,12 @@ public class VoiceCallController {
 
     @GetMapping("/{id}")
     public VoiceCallDTO getVoiceCall(@PathVariable String id){
-        return voiceCallService.getVoiceCallByIdSimple(id);
+        return voiceCallService.getVoiceCallById(id, false);
     }
 
     @GetMapping("/{id}/complete")
     public VoiceCallDTO getVoiceCallWithRels(@PathVariable String id){
-        return voiceCallService.getVoiceCallByIdComplete(id);
+        return voiceCallService.getVoiceCallById(id, true);
     }
 
     @PostMapping("/new")
