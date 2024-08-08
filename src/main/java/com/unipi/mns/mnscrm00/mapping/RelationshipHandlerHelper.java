@@ -54,7 +54,7 @@ public class RelationshipHandlerHelper {
         String newParentId = reqChild.getParentId(parentType);
         String oldParentId = childToBeUpdated.getParentId(parentType);
 
-        if (oldParentId != null && !oldParentId.equals(newParentId)) {
+        if (oldParentId != null && !StringUtil.stringsAreEqual(oldParentId, newParentId)) {
             Optional<P> oldParentOptional = parentRepository.findById(oldParentId);
             if (oldParentOptional.isPresent()) {
                 P oldParent = oldParentOptional.get();
