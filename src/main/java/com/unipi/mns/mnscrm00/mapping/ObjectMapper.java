@@ -104,13 +104,13 @@ public class ObjectMapper {
         result.setTitle(source.getTitle());
 
         if(isInsert){
-            result.setCreationDate(Date.valueOf(LocalDate.now()));
+            result.setCreationDate(Date.valueOf(LocalDate.now().plusDays(1)));
         }
 
         if(!isInsert &&
                 StringUtil.stringsAreEqual(source.getStatus(), "Closed") &&
                 !StringUtil.stringsAreEqual(target.getStatus(), "Closed")){
-            result.setClosedDate(Date.valueOf(LocalDate.now()));
+            result.setClosedDate(Date.valueOf(LocalDate.now().plusDays(1)));
         }
 
         return result;
