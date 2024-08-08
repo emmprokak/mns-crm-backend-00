@@ -8,13 +8,14 @@ import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Task;
 import com.unipi.mns.mnscrm00.utilities.ListConverter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class OpportunityDTOComplete extends OpportunityDTOSimple {
     private List<TaskDTO> tasks;
 
-    public OpportunityDTOComplete(String comments, String description, double expectedRevenue, String id, String relatedAccountId, String status, String title, String type, Account account, List<Task> tasks) {
-        super(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, account);
+    public OpportunityDTOComplete(String comments, String description, double expectedRevenue, String id, String relatedAccountId, String status, String title, String type, Account account, LocalDateTime created, LocalDateTime modified, List<Task> tasks) {
+        super(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, account, created, modified);
         this.tasks = ListConverter.convertEntitiesToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 

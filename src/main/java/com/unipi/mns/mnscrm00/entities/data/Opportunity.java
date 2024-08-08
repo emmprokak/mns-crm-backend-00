@@ -9,9 +9,12 @@ import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +53,13 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildE
     @Column(name="expected_revenue")
     private double expectedRevenue;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
     public Opportunity(String comments, double expectedRevenue, String id, Account relatedAccount, String status, String title, String type, String description) {
         this.comments = comments;
         this.expectedRevenue = expectedRevenue;
@@ -65,17 +75,17 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildE
 
     @Override
     public OpportunityDTO toDTOSimple() {
-        return new OpportunityDTOSimple(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
+        return new OpportunityDTOSimple(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified);
     }
 
     @Override
     public OpportunityDTO toDTOComplete() {
-        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, tasks);
+        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified, tasks);
     }
 
     @Override
     public OpportunityDTO toDTOMinimal() {
-        return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
+        return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified);
     }
 
     @Override
@@ -138,6 +148,22 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildE
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public String getDescription() {
