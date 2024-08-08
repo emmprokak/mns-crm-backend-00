@@ -63,7 +63,7 @@ public class TaskService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertTasksToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public TaskDTO updateTask(String id, Task task){

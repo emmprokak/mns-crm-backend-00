@@ -4,17 +4,20 @@ import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.dto.completes.OpportunityDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.OpportunityDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.OpportunityDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="Opportunity_ent")
-public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
+public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildEntity, ParentEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -73,6 +76,62 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
     @Override
     public OpportunityDTO toDTOMinimal() {
         return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Account.class){
+            return relatedAccountId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParentId(Class<P> entityType, P parent) {
+        return;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Account.class){
+            return (P) relatedAccount;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Account.class){
+            this.relatedAccount = (Account) parent;
+            if(parent != null){
+                this.relatedAccountId =  ((Account) parent).getId();
+            }
+        }
+    }
+
+    @Override
+    public <C> List<C> getChildrenEntities(Class<C> childType) {
+        if (childType == Task.class) {
+            return (List<C>) tasks;
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public <C> void addChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.add((Task) child);
+        }
+    }
+
+    @Override
+    public <C> void removeChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.remove((Task) child);
+        }
     }
 
     public List<Task> getTasks() {

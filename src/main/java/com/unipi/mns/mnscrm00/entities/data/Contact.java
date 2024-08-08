@@ -4,20 +4,24 @@ import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.completes.ContactDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.ContactDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.ContactDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Parent;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name="Contact_ent")
-public class Contact implements Sendable<ContactDTO>, DataEntity {
+public class Contact implements Sendable<ContactDTO>, DataEntity, ParentEntity, ChildEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -91,6 +95,79 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
     }
 
     public Contact() {}
+
+    @Override
+    public ContactDTO toDTOSimple() {
+        return new ContactDTOSimple(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
+    }
+
+    @Override
+    public ContactDTO toDTOComplete() {
+        return new ContactDTOComplete(cases, account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
+    }
+
+    @Override
+    public ContactDTO toDTOMinimal() {
+        return new ContactDTOMinimal(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
+    }
+
+    @Override
+    public <C> List<C> getChildrenEntities(Class<C> childType) {
+        if (childType == Case.class) {
+            return (List<C>) cases;
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public <C> void addChild(Class<C> childType, C child) {
+        if (childType == Case.class) {
+            cases.add((Case) child);
+        }
+    }
+
+    @Override
+    public <C> void removeChild(Class<C> childType, C child) {
+        if (childType == Case.class) {
+            cases.remove((Case) child);
+        }
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Account.class){
+            return accountId;
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public <P> void setParentId(Class<P> entityType, P parent) {
+        return;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Account.class){
+            return (P) account;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Account.class){
+            this.account = (Account) parent;
+            if(parent != null){
+                this.accountId =  ((Account) parent).getId();
+            }
+        }
+
+    }
 
     public List<Case> getCases() {
         return cases;
@@ -214,20 +291,5 @@ public class Contact implements Sendable<ContactDTO>, DataEntity {
 
     public void setRole(String role) {
         this.role = role;
-    }
-
-    @Override
-    public ContactDTO toDTOSimple() {
-        return new ContactDTOSimple(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
-    }
-
-    @Override
-    public ContactDTO toDTOComplete() {
-        return new ContactDTOComplete(cases, account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
-    }
-
-    @Override
-    public ContactDTO toDTOMinimal() {
-        return new ContactDTOMinimal(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
     }
 }

@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.TaskDTO;
 import com.unipi.mns.mnscrm00.dto.completes.TaskDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.TaskDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.TaskDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="Task_ent")
-public class Task implements Sendable<TaskDTO>, DataEntity {
+public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -96,6 +97,54 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
     @Override
     public TaskDTO toDTOMinimal() {
         return new TaskDTOMinimal(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity, created, modified);
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Lead.class){
+            return relatedLeadId;
+        }
+
+        if(entityType == Opportunity.class){
+            return relatedOpportunityId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParentId(Class<P> entityType, P parent) {
+        return;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Lead.class){
+            return (P) relatedLead;
+        }
+
+        if(entityType == Opportunity.class){
+            return (P) relatedOpportunity;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Lead.class){
+            this.relatedLead = (Lead) parent;
+            if(parent != null){
+                this.relatedLeadId =  ((Lead) parent).getId();
+            }
+        }
+
+        if(entityType == Opportunity.class){
+            this.relatedOpportunity = (Opportunity) parent;
+            if(parent != null){
+                this.relatedOpportunityId =  ((Opportunity) parent).getId();
+            }
+        }
     }
 
     public String getRelatedLeadId() {

@@ -63,7 +63,7 @@ public class CaseService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertCasesToDTOList(caseList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(caseList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public CaseDTO updateCase(String id, Case caseEntry){

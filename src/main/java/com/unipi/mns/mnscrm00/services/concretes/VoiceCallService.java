@@ -61,7 +61,7 @@ public class VoiceCallService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertVoiceCallsToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall){

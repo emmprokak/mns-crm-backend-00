@@ -69,7 +69,7 @@ public class AccountService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public List<AccountDTO> getAllAccountsWithFilters(int limit, String orderByField, String orderType){
