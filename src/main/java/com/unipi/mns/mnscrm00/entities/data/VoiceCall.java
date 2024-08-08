@@ -123,6 +123,8 @@ public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity, ChildEntit
             this.relatedAccount = (Account) parent;
             if(parent != null){
                 this.relatedAccountId = ((Account) parent).getId();
+            }else{
+                this.relatedAccountId = null;
             }
         }
 
@@ -130,6 +132,8 @@ public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity, ChildEntit
             this.relatedCase = (Case) parent;
             if(parent != null){
                 this.relatedCaseId = ((Case) parent).getId();
+            }else{
+                this.relatedCaseId = null;
             }
         }
     }

@@ -245,6 +245,8 @@ public class Account implements Sendable<AccountDTO>, DataEntity, ParentEntity, 
             this.parent = (Account) parent;
             if(parent != null){
                 this.parentId = ((Account) parent).getId();
+            }else{
+                this.parentId = null;
             }
         }
 
@@ -252,6 +254,8 @@ public class Account implements Sendable<AccountDTO>, DataEntity, ParentEntity, 
             this.relatedLead = (Lead) parent;
             if(parent != null){
                 this.relatedLeadId = ((Lead) parent).getId();
+            }else{
+                this.relatedLeadId = null;
             }
         }
     }

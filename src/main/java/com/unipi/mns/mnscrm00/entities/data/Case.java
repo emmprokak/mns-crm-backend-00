@@ -149,6 +149,8 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
             this.relatedAccount = (Account) parent;
             if(parent != null){
                 this.relatedAccountId =  ((Account) parent).getId();
+            }else{
+                this.relatedAccountId = null;
             }
         }
 
@@ -156,6 +158,8 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
             this.relatedContact = (Contact) parent;
             if(parent != null) {
                 this.relatedContactId = ((Contact) parent).getId();
+            }else{
+                this.relatedContactId = null;
             }
         }
     }

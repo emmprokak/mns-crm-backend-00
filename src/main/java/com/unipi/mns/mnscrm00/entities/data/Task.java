@@ -136,6 +136,8 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
             this.relatedLead = (Lead) parent;
             if(parent != null){
                 this.relatedLeadId =  ((Lead) parent).getId();
+            }else{
+                this.relatedLeadId = null;
             }
         }
 
@@ -143,6 +145,8 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
             this.relatedOpportunity = (Opportunity) parent;
             if(parent != null){
                 this.relatedOpportunityId =  ((Opportunity) parent).getId();
+            }else{
+                this.relatedOpportunityId = null;
             }
         }
     }

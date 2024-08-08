@@ -107,6 +107,8 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildE
             this.relatedAccount = (Account) parent;
             if(parent != null){
                 this.relatedAccountId =  ((Account) parent).getId();
+            }else{
+                this.relatedAccountId = null;
             }
         }
     }

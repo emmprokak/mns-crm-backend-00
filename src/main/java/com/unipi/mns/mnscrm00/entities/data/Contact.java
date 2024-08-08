@@ -164,6 +164,8 @@ public class Contact implements Sendable<ContactDTO>, DataEntity, ParentEntity, 
             this.account = (Account) parent;
             if(parent != null){
                 this.accountId =  ((Account) parent).getId();
+            }else{
+                this.accountId = null;
             }
         }
 
