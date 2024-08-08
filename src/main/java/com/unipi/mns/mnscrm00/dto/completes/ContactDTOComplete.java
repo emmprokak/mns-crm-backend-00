@@ -20,7 +20,7 @@ public class ContactDTOComplete extends ContactDTOSimple {
 
     public ContactDTOComplete(List<Case> cases, Account account, Date birthdate, String department, String email, String firstName, String id, boolean isActive, String lastName, String mobile, String phone, String prefix, String role, LocalDateTime created, LocalDateTime modified) {
         super(account, birthdate, department, email, firstName, id, isActive, lastName, mobile, phone, prefix, role, created, modified);
-        this.cases = ListConverter.convertCasesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.cases = ListConverter.convertEntitiesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public ContactDTOComplete(){
