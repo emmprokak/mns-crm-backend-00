@@ -80,7 +80,7 @@ public class VoiceCallService {
         VoiceCall taskToUpdate = voiceCallOptional.get();
         taskToUpdate = insertUpdateTrigger.handleVoiceCallEntry(voiceCall, taskToUpdate, false);
 
-        return voiceCallRepository.save(taskToUpdate).toDTOSimple();
+        return voiceCallRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteVoiceCallById(String id){

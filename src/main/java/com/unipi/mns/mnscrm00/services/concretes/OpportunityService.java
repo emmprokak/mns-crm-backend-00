@@ -84,7 +84,7 @@ public class OpportunityService implements EntityService {
         Opportunity opptyToUpdate = opptyOptional.get();
         opptyToUpdate = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToUpdate, false);
 
-        return opportunityRepository.save(opptyToUpdate).toDTOSimple();
+        return opportunityRepository.save(opptyToUpdate).toDTOComplete();
     }
 
     public boolean deleteOpportunityById(String id){

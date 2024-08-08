@@ -83,7 +83,7 @@ public class LeadService implements EntityService {
         Lead leadToUpdate = leadOptional.get();
         leadToUpdate = insertUpdateTrigger.handleLeadEntry(lead, leadToUpdate);
 
-        return leadRepository.save(leadToUpdate).toDTOSimple();
+        return leadRepository.save(leadToUpdate).toDTOComplete();
     }
 
     public boolean deleteLeadById(String id){

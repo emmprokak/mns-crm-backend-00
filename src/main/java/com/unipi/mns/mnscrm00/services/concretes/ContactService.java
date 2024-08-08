@@ -83,7 +83,7 @@ public class ContactService implements EntityService {
 
         Contact contactToUpdate = contactOptional.get();
         contactToUpdate = insertUpdateTrigger.handleContactEntry(contact, contactToUpdate, false);
-        return contactRepository.save(contactToUpdate).toDTOSimple();
+        return contactRepository.save(contactToUpdate).toDTOComplete();
     }
 
     public boolean deleteContactById(String id){

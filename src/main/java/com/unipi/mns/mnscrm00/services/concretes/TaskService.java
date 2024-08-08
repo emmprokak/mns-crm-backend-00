@@ -82,7 +82,7 @@ public class TaskService {
         Task taskToUpdate = taskOptional.get();
         taskToUpdate = insertUpdateTrigger.handleTaskEntry(task, taskToUpdate, false);
 
-        return taskRepository.save(taskToUpdate).toDTOSimple();
+        return taskRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteTaskById(String id){

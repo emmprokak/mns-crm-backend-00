@@ -101,7 +101,7 @@ public class AccountService implements EntityService {
         Account accToUpdate = accountOptional.get();
         accToUpdate = insertUpdateTrigger.handleAccountEntry(account, accToUpdate);
 
-        return accountRepository.save(accToUpdate).toDTOSimple();
+        return accountRepository.save(accToUpdate).toDTOComplete();
     }
 
     public boolean deleteAccountById(String id){

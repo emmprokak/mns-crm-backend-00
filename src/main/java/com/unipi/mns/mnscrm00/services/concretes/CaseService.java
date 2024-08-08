@@ -81,7 +81,7 @@ public class CaseService implements EntityService {
 
         Case caseToUpdate = caseOptional.get();
         caseToUpdate = insertUpdateTrigger.handleCaseEntry(caseEntry, caseToUpdate, false);
-        return caseRepository.save(caseToUpdate).toDTOSimple();
+        return caseRepository.save(caseToUpdate).toDTOComplete();
     }
 
     public boolean deleteCaseById(String id){
