@@ -21,10 +21,7 @@ import java.util.Optional;
 public class BusinessProcessController {
 
     @Autowired
-    BusinessProcess businessProcess;
-
-    @Autowired
-    LeadRepository leadRepository;
+    private BusinessProcess businessProcess;
 
     @PostMapping ("/lead-conversion/{leadId}")
     public List<EntityDTO> convertLead(@PathVariable String leadId){

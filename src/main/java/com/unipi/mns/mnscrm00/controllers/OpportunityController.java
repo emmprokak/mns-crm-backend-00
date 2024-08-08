@@ -17,7 +17,6 @@ public class OpportunityController {
     @Autowired
     private OpportunityService opportunityService;
 
-
     @GetMapping("/{id}")
     public OpportunityDTO getOpportunity(@PathVariable String id){
         return opportunityService.getOpportunityById(id, false);
