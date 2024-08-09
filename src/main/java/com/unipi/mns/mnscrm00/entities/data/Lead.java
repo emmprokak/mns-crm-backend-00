@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.dto.completes.LeadDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.LeadDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.LeadDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Table(name="Lead_ent")
-public class Lead implements Sendable<LeadDTO>, ParentEntity {
+public class Lead implements Sendable<LeadDTO>, DataEntity, ParentEntity {
     @Id
     @UuidGenerator
     private String id;

@@ -36,10 +36,6 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
     @Column(name = "opportunity_id_txt")
     private String relatedOpportunityId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User responsible;
-
     @Column(name = "name")
     private String name;
 
@@ -63,20 +59,19 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
     private LocalDateTime modified;
 
 
-    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type) {
+    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, String status, String type) {
         this.dueDate = dueDate;
         this.id = id;
         this.name = name;
         this.reason = reason;
         this.relatedLead = relatedLead;
         this.relatedOpportunity = relatedOpportunity;
-        this.responsible = responsible;
         this.status = status;
         this.type = type;
     }
 
-    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type, String relatedLeadId, String relatedOpportunityId) {
-        this(dueDate, id, name, reason, relatedLead, relatedOpportunity, responsible, status, type);
+    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, String status, String type, String relatedLeadId, String relatedOpportunityId) {
+        this(dueDate, id, name, reason, relatedLead, relatedOpportunity, status, type);
         this.relatedLeadId = relatedLeadId;
         this.relatedOpportunityId = relatedOpportunityId;
     }
@@ -213,14 +208,6 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
 
     public void setRelatedOpportunity(Opportunity relatedOpportunity) {
         this.relatedOpportunity = relatedOpportunity;
-    }
-
-    public User getResponsible() {
-        return responsible;
-    }
-
-    public void setResponsible(User responsible) {
-        this.responsible = responsible;
     }
 
     public String getStatus() {

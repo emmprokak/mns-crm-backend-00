@@ -39,10 +39,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
     @Column(name = "contact_id_txt")
     private String relatedContactId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User caseResponsible;
-
     @OneToMany(cascade = CascadeType.ALL)
     private List<Task> tasks;
 
@@ -80,8 +76,7 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
     @UpdateTimestamp
     private LocalDateTime modified;
 
-    public Case(User caseResponsible, String category, Date closedDate, Date creationDate, String id, String reason, Account relatedAccount, Contact relatedContact, String severity, String source, String status, String title) {
-        this.caseResponsible = caseResponsible;
+    public Case(String category, Date closedDate, Date creationDate, String id, String reason, Account relatedAccount, Contact relatedContact, String severity, String source, String status, String title) {
         this.category = category;
         this.closedDate = closedDate;
         this.creationDate = creationDate;
@@ -197,14 +192,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
 
     public List<Task> getTasks() {
         return tasks;
-    }
-
-    public User getCaseResponsible() {
-        return caseResponsible;
-    }
-
-    public void setCaseResponsible(User caseResponsible) {
-        this.caseResponsible = caseResponsible;
     }
 
     public String getRelatedAccountId() {
