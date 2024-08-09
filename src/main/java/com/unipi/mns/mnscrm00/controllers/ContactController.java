@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ContactController {
     }
 
     @PostMapping("/new")
-    public ContactDTO createContact(@RequestBody Contact contact){
+    public ContactDTO createContact(@RequestBody Contact contact) throws DataValidationException {
         return contactService.insertContact(contact);
     }
 
@@ -36,7 +37,7 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ContactDTO updateContact(@PathVariable String id, @RequestBody Contact contact){
+    public ContactDTO updateContact(@PathVariable String id, @RequestBody Contact contact) throws DataValidationException {
         return contactService.updateContact(id, contact);
     }
 

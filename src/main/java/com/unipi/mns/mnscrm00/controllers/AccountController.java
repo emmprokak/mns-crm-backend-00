@@ -3,6 +3,7 @@ package com.unipi.mns.mnscrm00.controllers;
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class AccountController {
     }
 
     @PostMapping("/new")
-    public AccountDTO createAccount(@RequestBody Account account){
+    public AccountDTO createAccount(@RequestBody Account account) throws DataValidationException {
         return accountService.insertAccount(account);
     }
 
@@ -41,7 +42,7 @@ public class AccountController {
     }
 
     @PutMapping("/{id}")
-    public AccountDTO updateAccount(@PathVariable String id, @RequestBody Account account){
+    public AccountDTO updateAccount(@PathVariable String id, @RequestBody Account account) throws DataValidationException {
         return accountService.updateAccount(id, account);
     }
 

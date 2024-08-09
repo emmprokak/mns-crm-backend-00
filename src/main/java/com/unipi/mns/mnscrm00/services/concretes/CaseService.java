@@ -5,6 +5,7 @@ import com.unipi.mns.mnscrm00.dal.CaseRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.CaseDTO;
 import com.unipi.mns.mnscrm00.entities.data.Case;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
 import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
@@ -49,7 +50,7 @@ public class CaseService implements EntityService {
         return caseOptional.get().toDTOSimple();
     }
 
-    public CaseDTO insertCase(Case caseEntry){
+    public CaseDTO insertCase(Case caseEntry) throws DataValidationException {
         Case caseToInsert = new Case();
         caseToInsert = insertUpdateTrigger.handleCaseEntry(caseEntry, caseToInsert, true);
 
@@ -66,7 +67,7 @@ public class CaseService implements EntityService {
         return ListConverter.convertEntitiesToDTOList(caseList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public CaseDTO updateCase(String id, Case caseEntry){
+    public CaseDTO updateCase(String id, Case caseEntry) throws DataValidationException {
         Optional<Case> caseOptional = caseRepository.findById(id);
 
         if(!caseOptional.isPresent()){

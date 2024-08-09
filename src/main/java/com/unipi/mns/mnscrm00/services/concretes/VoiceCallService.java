@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.VoiceCallRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.VoiceCallDTO;
 import com.unipi.mns.mnscrm00.entities.data.VoiceCall;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
 import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
@@ -47,7 +48,7 @@ public class VoiceCallService {
         return voiceCallOptional.get().toDTOSimple();
     }
 
-    public VoiceCallDTO insertVoiceCall(VoiceCall voiceCall){
+    public VoiceCallDTO insertVoiceCall(VoiceCall voiceCall) throws DataValidationException {
         VoiceCall voiceCallToInsert = new VoiceCall();
         voiceCallToInsert = insertUpdateTrigger.handleVoiceCallEntry(voiceCall, voiceCallToInsert, true);
 
@@ -64,7 +65,7 @@ public class VoiceCallService {
         return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall){
+    public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall) throws DataValidationException {
         Optional<VoiceCall> voiceCallOptional = voiceCallRepository.findById(id);
 
         if(!voiceCallOptional.isPresent()){

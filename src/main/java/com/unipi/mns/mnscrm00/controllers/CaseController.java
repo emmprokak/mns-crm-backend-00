@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.CaseDTO;
 import com.unipi.mns.mnscrm00.entities.data.Case;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CaseController {
     }
 
     @PostMapping("/new")
-    public CaseDTO createCase(@RequestBody Case caseEntry){
+    public CaseDTO createCase(@RequestBody Case caseEntry) throws DataValidationException {
         return caseService.insertCase(caseEntry);
     }
 
@@ -36,7 +37,7 @@ public class CaseController {
     }
 
     @PutMapping("/{id}")
-    public CaseDTO updateCase(@PathVariable String id, @RequestBody Case caseEntry){
+    public CaseDTO updateCase(@PathVariable String id, @RequestBody Case caseEntry) throws DataValidationException {
         return caseService.updateCase(id, caseEntry);
     }
 

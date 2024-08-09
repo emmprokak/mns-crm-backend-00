@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.ContactService;
 import com.unipi.mns.mnscrm00.services.concretes.LeadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class LeadController {
     }
 
     @PostMapping("/new")
-    public LeadDTO createLead(@RequestBody Lead lead){
+    public LeadDTO createLead(@RequestBody Lead lead) throws DataValidationException {
         return leadService.insertLead(lead);
     }
 
@@ -39,7 +40,7 @@ public class LeadController {
     }
 
     @PutMapping("/{id}")
-    public LeadDTO updateLead(@PathVariable String id, @RequestBody Lead lead){
+    public LeadDTO updateLead(@PathVariable String id, @RequestBody Lead lead) throws DataValidationException {
         return leadService.updateLead(id, lead);
     }
 

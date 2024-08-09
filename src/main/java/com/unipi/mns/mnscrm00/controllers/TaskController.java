@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.TaskDTO;
 import com.unipi.mns.mnscrm00.entities.data.Task;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class TaskController {
     }
 
     @PostMapping("/new")
-    public TaskDTO createTask(@RequestBody Task task){
+    public TaskDTO createTask(@RequestBody Task task) throws DataValidationException {
         return taskService.insertTask(task);
     }
 
@@ -36,7 +37,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public TaskDTO updateTask(@PathVariable String id, @RequestBody Task task){
+    public TaskDTO updateTask(@PathVariable String id, @RequestBody Task task) throws DataValidationException {
         return taskService.updateTask(id, task);
     }
 
