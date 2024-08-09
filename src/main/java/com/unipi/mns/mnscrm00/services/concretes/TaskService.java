@@ -63,7 +63,7 @@ public class TaskService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertTasksToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public TaskDTO updateTask(String id, Task task){
@@ -82,7 +82,7 @@ public class TaskService {
         Task taskToUpdate = taskOptional.get();
         taskToUpdate = insertUpdateTrigger.handleTaskEntry(task, taskToUpdate, false);
 
-        return taskRepository.save(taskToUpdate).toDTOSimple();
+        return taskRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteTaskById(String id){

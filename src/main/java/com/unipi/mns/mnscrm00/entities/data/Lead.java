@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.dto.completes.LeadDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.LeadDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.LeadDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,11 +13,12 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="Lead_ent")
-public class Lead implements Sendable<LeadDTO>{
+public class Lead implements Sendable<LeadDTO>, ParentEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -92,6 +94,29 @@ public class Lead implements Sendable<LeadDTO>{
     @Override
     public LeadDTO toDTOMinimal() {
         return new LeadDTOMinimal(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
+    }
+
+    @Override
+    public <C> List<C> getChildrenEntities(Class<C> childType) {
+        if (childType == Task.class) {
+            return (List<C>) tasks;
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public <C> void addChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.add((Task) child);
+        }
+    }
+
+    @Override
+    public <C> void removeChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.remove((Task) child);
+        }
     }
 
     public List<Task> getTasks() {
@@ -201,6 +226,4 @@ public class Lead implements Sendable<LeadDTO>{
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 }

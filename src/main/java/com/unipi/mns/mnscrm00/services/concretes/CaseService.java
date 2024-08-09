@@ -63,7 +63,7 @@ public class CaseService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertCasesToDTOList(caseList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(caseList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public CaseDTO updateCase(String id, Case caseEntry){
@@ -81,7 +81,7 @@ public class CaseService implements EntityService {
 
         Case caseToUpdate = caseOptional.get();
         caseToUpdate = insertUpdateTrigger.handleCaseEntry(caseEntry, caseToUpdate, false);
-        return caseRepository.save(caseToUpdate).toDTOSimple();
+        return caseRepository.save(caseToUpdate).toDTOComplete();
     }
 
     public boolean deleteCaseById(String id){

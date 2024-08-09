@@ -4,17 +4,23 @@ import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.dto.completes.OpportunityDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.OpportunityDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.OpportunityDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name="Opportunity_ent")
-public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
+public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildEntity, ParentEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -47,6 +53,13 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
     @Column(name="expected_revenue")
     private double expectedRevenue;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @UpdateTimestamp
+    private LocalDateTime modified;
+
     public Opportunity(String comments, double expectedRevenue, String id, Account relatedAccount, String status, String title, String type, String description) {
         this.comments = comments;
         this.expectedRevenue = expectedRevenue;
@@ -62,21 +75,95 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity {
 
     @Override
     public OpportunityDTO toDTOSimple() {
-        return new OpportunityDTOSimple(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
+        return new OpportunityDTOSimple(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified);
     }
 
     @Override
     public OpportunityDTO toDTOComplete() {
-        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, tasks);
+        return new OpportunityDTOComplete(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified, tasks);
     }
 
     @Override
     public OpportunityDTO toDTOMinimal() {
-        return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount);
+        return new OpportunityDTOMinimal(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, relatedAccount, created, modified);
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Account.class){
+            return relatedAccountId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParentId(Class<P> entityType, P parent) {
+        return;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Account.class){
+            return (P) relatedAccount;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Account.class){
+            this.relatedAccount = (Account) parent;
+            if(parent != null){
+                this.relatedAccountId =  ((Account) parent).getId();
+            }else{
+                this.relatedAccountId = null;
+            }
+        }
+    }
+
+    @Override
+    public <C> List<C> getChildrenEntities(Class<C> childType) {
+        if (childType == Task.class) {
+            return (List<C>) tasks;
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public <C> void addChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.add((Task) child);
+        }
+    }
+
+    @Override
+    public <C> void removeChild(Class<C> childType, C child) {
+        if (childType == Task.class) {
+            tasks.remove((Task) child);
+        }
     }
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
     }
 
     public String getDescription() {

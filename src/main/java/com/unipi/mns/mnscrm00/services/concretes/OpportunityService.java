@@ -65,7 +65,7 @@ public class OpportunityService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertOpportunitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public OpportunityDTO updateOpportunity(String id, Opportunity opportunity){
@@ -84,7 +84,7 @@ public class OpportunityService implements EntityService {
         Opportunity opptyToUpdate = opptyOptional.get();
         opptyToUpdate = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToUpdate, false);
 
-        return opportunityRepository.save(opptyToUpdate).toDTOSimple();
+        return opportunityRepository.save(opptyToUpdate).toDTOComplete();
     }
 
     public boolean deleteOpportunityById(String id){

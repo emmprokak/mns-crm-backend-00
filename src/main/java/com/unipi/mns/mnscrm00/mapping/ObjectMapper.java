@@ -96,20 +96,22 @@ public class ObjectMapper {
     public static Case mapCaseFields(Case source, Case target, Boolean isInsert){
         Case result = target;
 
+        String previousCaseStatus = target.getStatus();
+
+        result.setStatus(source.getStatus());
         result.setCategory(source.getCategory());
         result.setReason(source.getReason());
-        result.setStatus(source.getStatus());
         result.setSeverity(source.getSeverity());
         result.setSource(source.getSource());
         result.setTitle(source.getTitle());
 
         if(isInsert){
-            result.setCreationDate(Date.valueOf(LocalDate.now()));
+            result.setCreationDate(Date.valueOf(LocalDate.now().plusDays(1)));
         }
 
         if(!isInsert &&
                 StringUtil.stringsAreEqual(source.getStatus(), "Closed") &&
-                !StringUtil.stringsAreEqual(target.getStatus(), "Closed")){
+                !StringUtil.stringsAreEqual(previousCaseStatus, "Closed")){
             result.setClosedDate(Date.valueOf(LocalDate.now()));
         }
 

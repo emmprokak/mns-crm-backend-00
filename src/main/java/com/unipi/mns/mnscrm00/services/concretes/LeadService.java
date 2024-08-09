@@ -64,7 +64,7 @@ public class LeadService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertLeadsToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertEntitiesToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public LeadDTO updateLead(String id, Lead lead){
@@ -83,7 +83,7 @@ public class LeadService implements EntityService {
         Lead leadToUpdate = leadOptional.get();
         leadToUpdate = insertUpdateTrigger.handleLeadEntry(lead, leadToUpdate);
 
-        return leadRepository.save(leadToUpdate).toDTOSimple();
+        return leadRepository.save(leadToUpdate).toDTOComplete();
     }
 
     public boolean deleteLeadById(String id){

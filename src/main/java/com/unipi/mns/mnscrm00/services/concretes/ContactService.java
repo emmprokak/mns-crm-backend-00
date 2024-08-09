@@ -65,7 +65,7 @@ public class ContactService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertContactsToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public ContactDTO updateContact(String id, Contact contact){
@@ -83,7 +83,7 @@ public class ContactService implements EntityService {
 
         Contact contactToUpdate = contactOptional.get();
         contactToUpdate = insertUpdateTrigger.handleContactEntry(contact, contactToUpdate, false);
-        return contactRepository.save(contactToUpdate).toDTOSimple();
+        return contactRepository.save(contactToUpdate).toDTOComplete();
     }
 
     public boolean deleteContactById(String id){

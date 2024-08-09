@@ -28,7 +28,7 @@ public class InsertUpdateTrigger {
 
     public Lead handleLeadEntry(Lead source, Lead target){
         target = ObjectMapper.mapLeadFields(source, target);
-
+        // lead has no parents
         return target;
     }
 

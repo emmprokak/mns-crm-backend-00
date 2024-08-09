@@ -61,7 +61,7 @@ public class VoiceCallService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertVoiceCallsToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall){
@@ -80,7 +80,7 @@ public class VoiceCallService {
         VoiceCall taskToUpdate = voiceCallOptional.get();
         taskToUpdate = insertUpdateTrigger.handleVoiceCallEntry(voiceCall, taskToUpdate, false);
 
-        return voiceCallRepository.save(taskToUpdate).toDTOSimple();
+        return voiceCallRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteVoiceCallById(String id){
