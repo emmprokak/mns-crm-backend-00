@@ -4,9 +4,11 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.LeadRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.EntityDTO;
 import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
+import com.unipi.mns.mnscrm00.dto.processes.ProcessOutputDTO;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.process.BusinessProcess;
+import com.unipi.mns.mnscrm00.services.concretes.BusinessProcessService;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,10 +23,15 @@ import java.util.Optional;
 public class BusinessProcessController {
 
     @Autowired
-    private BusinessProcess businessProcess;
+    private BusinessProcessService businessProcessService;
 
     @PostMapping ("/lead-conversion/{leadId}")
     public List<EntityDTO> convertLead(@PathVariable String leadId){
-        return businessProcess.leadConversion(leadId);
+        return businessProcessService.convertLead(leadId);
+    }
+
+    @GetMapping ("/discount")
+    public ProcessOutputDTO clientDiscount(@RequestParam String accountId, @RequestParam double amount){
+        return businessProcessService.getClientDiscount(accountId, amount);
     }
 }
