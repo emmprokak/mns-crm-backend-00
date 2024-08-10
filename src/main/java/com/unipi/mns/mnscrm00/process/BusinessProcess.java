@@ -18,6 +18,7 @@ import com.unipi.mns.mnscrm00.process.discounts.DiscountStrategy;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.IndustryDiscount;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.LoyaltyDiscount;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.RevenueDiscount;
+import com.unipi.mns.mnscrm00.process.lead_conversion.*;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import jakarta.transaction.Transactional;
@@ -62,20 +63,18 @@ public class BusinessProcess {
         Lead inputLead = leadOptional.get();
 
         Account acc = new Account();
-        acc = ObjectMapper.mapLeadToAccount(inputLead, acc);
         Contact con = new Contact();
-        con = ObjectMapper.mapLeadToContact(inputLead, con);
         Opportunity opp = new Opportunity();
-        opp = ObjectMapper.mapLeadToOpportunity(inputLead, opp);
 
-        relationshipMapper.mapLeadToChildren(acc, con, opp, inputLead);
+        LeadConversionInvoker invoker = new LeadConversionInvoker();
 
-        acc = accountRepository.save(acc);
+        invoker.addCommand(new CreateAccountCommand(inputLead, acc));
+        invoker.addCommand(new CreateContactCommand(inputLead, con));
+        invoker.addCommand(new CreateOpportunityCommand(inputLead, opp));
+        invoker.addCommand(new MapLeadToChildrenCommand(inputLead, acc, con, opp, relationshipMapper, accountRepository));
+        invoker.addCommand(new MapLeadConversionChildrenRelationships(acc, con, opp, relationshipMapper, contactRepository, opportunityRepository));
 
-        relationshipMapper.mapLeadConversionChildrenRelationships(acc, con, opp);
-
-        contactRepository.save(con);
-        opportunityRepository.save(opp);
+        invoker.executeCommands();
 
         return Arrays.asList(acc.toDTOSimple(), con.toDTOSimple(), opp.toDTOSimple());
     }
