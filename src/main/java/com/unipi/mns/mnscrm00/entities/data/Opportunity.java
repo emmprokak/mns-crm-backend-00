@@ -98,11 +98,6 @@ public class Opportunity implements Sendable<OpportunityDTO>, DataEntity, ChildE
     }
 
     @Override
-    public <P> void setParentId(Class<P> entityType, P parent) {
-        return;
-    }
-
-    @Override
     public <P> P getParent(Class<P> entityType) {
         if(entityType == Account.class){
             return (P) relatedAccount;

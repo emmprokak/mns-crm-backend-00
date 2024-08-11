@@ -17,24 +17,14 @@ import java.util.List;
 
 public class CaseDTOComplete extends CaseDTOSimple {
 
-    private List<TaskDTO> tasks;
     private List<VoiceCallDTO> calls;
 
-    public CaseDTOComplete(String category, LocalDateTime created, String id, LocalDateTime modified, String reason, Account account, Contact contact, String severity, String source, String status, String title, List<Task> tasks, Date createdDate, Date closedDate, List<VoiceCall> calls) {
+    public CaseDTOComplete(String category, LocalDateTime created, String id, LocalDateTime modified, String reason, Account account, Contact contact, String severity, String source, String status, String title, Date createdDate, Date closedDate, List<VoiceCall> calls) {
         super(category, created, id, modified, reason, account, contact, severity, source, status, title, createdDate, closedDate);
-        this.tasks = ListConverter.convertEntitiesToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
         this.calls = ListConverter.convertEntitiesToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public CaseDTOComplete() {}
-
-    public List<TaskDTO> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<TaskDTO> tasks) {
-        this.tasks = tasks;
-    }
 
     public List<VoiceCallDTO> getCalls() {
         return calls;

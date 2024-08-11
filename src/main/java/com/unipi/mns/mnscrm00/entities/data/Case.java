@@ -40,9 +40,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
     private String relatedContactId;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Task> tasks;
-
-    @OneToMany(cascade = CascadeType.ALL)
     private List<VoiceCall> calls;
 
     @Column(name="title")
@@ -99,7 +96,7 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
 
     @Override
     public CaseDTO toDTOComplete() {
-        return new CaseDTOComplete(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, tasks, creationDate, closedDate, calls);
+        return new CaseDTOComplete(category, created, id, modified, reason, relatedAccount, relatedContact, severity, source, status, title, creationDate, closedDate, calls);
     }
 
     @Override
@@ -118,11 +115,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
         }
 
         return null;
-    }
-
-    @Override
-    public <P> void setParentId(Class<P> entityType, P parent) {
-        return;
     }
 
     @Override
@@ -161,8 +153,8 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
 
     @Override
     public <C> List<C> getChildrenEntities(Class<C> childType) {
-        if (childType == Task.class) {
-            return (List<C>) tasks;
+        if (childType == VoiceCall.class) {
+            return (List<C>) calls;
         }
 
         return new ArrayList<>();
@@ -170,15 +162,15 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
 
     @Override
     public <C> void addChild(Class<C> childType, C child) {
-        if (childType == Task.class) {
-            tasks.add((Task) child);
+        if (childType == VoiceCall.class) {
+            calls.add((VoiceCall) child);
         }
     }
 
     @Override
     public <C> void removeChild(Class<C> childType, C child) {
-        if (childType == Task.class) {
-            tasks.add((Task) child);
+        if (childType == VoiceCall.class) {
+            calls.add((VoiceCall) child);
         }
     }
 
@@ -188,10 +180,6 @@ public class Case implements Sendable<CaseDTO>, DataEntity, ChildEntity, ParentE
 
     public void setCalls(List<VoiceCall> calls) {
         this.calls = calls;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
     }
 
     public String getRelatedAccountId() {

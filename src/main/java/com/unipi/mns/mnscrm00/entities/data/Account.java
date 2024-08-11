@@ -222,11 +222,6 @@ public class Account implements Sendable<AccountDTO>, DataEntity, ParentEntity, 
     }
 
     @Override
-    public <P> void setParentId(Class<P> entityType, P parent) {
-
-    }
-
-    @Override
     public <P> P getParent(Class<P> entityType) {
         if(entityType == Account.class){
             return (P) parent;

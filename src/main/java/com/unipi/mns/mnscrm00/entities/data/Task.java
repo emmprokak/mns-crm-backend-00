@@ -108,11 +108,6 @@ public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
     }
 
     @Override
-    public <P> void setParentId(Class<P> entityType, P parent) {
-        return;
-    }
-
-    @Override
     public <P> P getParent(Class<P> entityType) {
         if(entityType == Lead.class){
             return (P) relatedLead;
