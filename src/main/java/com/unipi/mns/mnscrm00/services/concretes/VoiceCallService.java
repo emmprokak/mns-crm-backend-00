@@ -56,13 +56,13 @@ public class VoiceCallService {
     }
 
     public List<VoiceCallDTO> getAllVoiceCalls(){
-        List<VoiceCall> taskList = voiceCallRepository.findAll();
+        List<VoiceCall> voiceCallList = voiceCallRepository.findAll();
 
-        if(taskList.size() <= 0){
+        if(voiceCallList.size() <= 0){
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(voiceCallList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall) throws DataValidationException {

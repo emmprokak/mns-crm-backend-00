@@ -25,10 +25,8 @@ public class AccountDeletionHandler implements DeletionHandler<Account> {
 
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private OpportunityRepository opportunityRepository;
-
     @Autowired
     private ContactRepository contactRepository;
     @Autowired

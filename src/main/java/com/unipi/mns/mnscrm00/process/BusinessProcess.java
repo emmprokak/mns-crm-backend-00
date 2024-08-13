@@ -15,6 +15,7 @@ import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.process.discounts.DiscountContext;
 import com.unipi.mns.mnscrm00.process.discounts.DiscountStrategy;
+import com.unipi.mns.mnscrm00.process.discounts.DiscountStrategyFactory;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.IndustryDiscount;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.LoyaltyDiscount;
 import com.unipi.mns.mnscrm00.process.discounts.strategies.RevenueDiscount;
@@ -44,6 +45,8 @@ public class BusinessProcess {
     private RelationshipMapper relationshipMapper;
     @Autowired
     private OpportunityRepository opportunityRepository;
+    @Autowired
+    private DiscountStrategyFactory discountStrategyFactory;
 
     @Transactional
     public List<EntityDTO> leadConversion(String leadId) {
@@ -61,7 +64,6 @@ public class BusinessProcess {
         }
 
         Lead inputLead = leadOptional.get();
-
         Account acc = new Account();
         Contact con = new Contact();
         Opportunity opp = new Opportunity();
@@ -72,7 +74,12 @@ public class BusinessProcess {
         invoker.addCommand(new CreateContactCommand(inputLead, con));
         invoker.addCommand(new CreateOpportunityCommand(inputLead, opp));
         invoker.addCommand(new MapLeadToChildrenCommand(inputLead, acc, con, opp, relationshipMapper, accountRepository));
-        invoker.addCommand(new MapLeadConversionChildrenRelationships(acc, con, opp, relationshipMapper, contactRepository, opportunityRepository));
+        invoker.addCommand(new MapLeadConversionChildrenRelationships(acc,
+                con, opp,
+                relationshipMapper,
+                contactRepository,
+                opportunityRepository)
+        );
 
         invoker.executeCommands();
 
@@ -94,20 +101,16 @@ public class BusinessProcess {
 
         Account account = accountOptional.get();
         DiscountContext discountContext = new DiscountContext();
-        DiscountStrategy selectedDiscountStrategy;
-
-        if (StringUtil.stringsAreEqual(account.getIndustry(), "IT") || StringUtil.stringsAreEqual(account.getIndustry(), "Insurance")) {
-            selectedDiscountStrategy = new IndustryDiscount();
-        } else if (account.getRevenue() < 200_000) {
-            selectedDiscountStrategy = new RevenueDiscount();
-        } else {
-            selectedDiscountStrategy = new LoyaltyDiscount();
-        }
+        DiscountStrategy selectedDiscountStrategy = discountStrategyFactory.getStrategy(account);
 
         discountContext.setStrategy(selectedDiscountStrategy);
         double discountPercentage = discountContext.executeStrategy(accountOptional.get());
 
-        return new ProcessOutputDTO("totalAmount", "discountProcess", String.valueOf((1 - discountPercentage) * amount));
+        return new ProcessOutputDTO(
+                "totalAmount",
+                "discountProcess",
+                String.valueOf((1 - discountPercentage) * amount)
+        );
     }
 
 }

@@ -18,7 +18,12 @@ public class MapLeadConversionChildrenRelationships implements Command{
     private ContactRepository contactRepository;
     private OpportunityRepository opportunityRepository;
 
-    public MapLeadConversionChildrenRelationships(Account account, Contact contact, Opportunity opportunity, RelationshipMapper relationshipMapper, ContactRepository contactRepository, OpportunityRepository opportunityRepository){
+    public MapLeadConversionChildrenRelationships(Account account,
+                                                  Contact contact,
+                                                  Opportunity opportunity,
+                                                  RelationshipMapper relationshipMapper,
+                                                  ContactRepository contactRepository,
+                                                  OpportunityRepository opportunityRepository){
         this.account = account;
         this.contact = contact;
         this.opportunity = opportunity;

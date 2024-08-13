@@ -35,8 +35,9 @@ public class DeleteTrigger {
         if (handler != null) {
             handler.delete(entity);
         } else {
-            //TODO: enforce establihsed exception system
-            throw new IllegalArgumentException("No handler found for entity type: " + entity.getClass().getName());
+            throw new IllegalArgumentException(
+                    "No handler found for Entity: " + entity.getClass().getName()
+            );
         }
     }
 }

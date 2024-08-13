@@ -65,8 +65,6 @@ public class RelationshipHandlerHelper {
 
         if (newParentId == null) {
             childToBeUpdated.setParent(parentType, null);
-//            childToBeUpdated.setParentId(parentType, null);
-
             return childRepository.save(childToBeUpdated);
         }
 

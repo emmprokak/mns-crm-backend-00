@@ -14,7 +14,6 @@ public class InsertUpdateTrigger {
 
     @Autowired
     private RelationshipMapper relationshipMapper;
-
     @Autowired
     private AccountValidationProcessor accountValidationProcessor;
     @Autowired

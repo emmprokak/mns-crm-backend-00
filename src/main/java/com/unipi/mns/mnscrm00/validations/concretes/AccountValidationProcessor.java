@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AccountValidationProcessor extends ValidationTemplate<Account> {
     @Override
-    @SuppressWarnings("unchecked")
     protected void validate(Account entry) throws DataValidationException {
         if(StringUtil.stringIsEmptyOrNull(entry.getCompanyName()) || StringUtil.stringIsEmptyOrNull(entry.getVat())){
             throw new DataValidationException("Please provide Company Name and VAT");
