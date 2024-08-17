@@ -70,7 +70,7 @@ public class AccountService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public List<AccountDTO> getAllAccountsWithFilters(int limit, String orderByField, String orderType){
@@ -119,7 +119,7 @@ public class AccountService implements EntityService {
         }
 
         Account accToDelete = accountOptional.get();
-        deleteTrigger.handleReferenceDeletion(accToDelete);
+        deleteTrigger.handleAccountDelete(accToDelete);
         accountRepository.delete(accToDelete);
 
         return true;

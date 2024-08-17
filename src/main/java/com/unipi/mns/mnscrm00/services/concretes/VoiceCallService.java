@@ -62,7 +62,7 @@ public class VoiceCallService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(voiceCallList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertVoiceCallsToDTOList(voiceCallList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall) throws DataValidationException {
@@ -97,7 +97,7 @@ public class VoiceCallService {
             );
         }
 
-        deleteTrigger.handleReferenceDeletion(voiceCallOptional.get());
+        deleteTrigger.handleVoiceCallDelete(voiceCallOptional.get());
         voiceCallRepository.delete(voiceCallOptional.get());
 
         return true;

@@ -23,11 +23,11 @@ public class AccountDTOComplete extends AccountDTOSimple {
 
     public AccountDTOComplete(String billingAddress, int clientRating, String companyName, String description, String id, String industry, boolean isActive, Account parent, Lead relatedLead, double revenue, String type, String vat, String website, List<Account> accounts, List<Contact> contacts, List<Case> cases, List<VoiceCall> calls, LocalDateTime created, LocalDateTime modified, List<Opportunity> opportunities){
         super(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
-        this.children = ListConverter.convertEntitiesToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.contacts = ListConverter.convertEntitiesToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.cases = ListConverter.convertEntitiesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.calls = ListConverter.convertEntitiesToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
-        this.opportunities = ListConverter.convertEntitiesToDTOList(opportunities, Constants.DTO.CONVERT_TO_DTO_MINIMAL);;
+        this.children = ListConverter.convertAccountsToDTOList(accounts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.contacts = ListConverter.convertContactsToDTOList(contacts, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.cases = ListConverter.convertCasesToDTOList(cases, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.calls = ListConverter.convertVoiceCallsToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.opportunities = ListConverter.convertOpportunitiesToDTOList(opportunities, Constants.DTO.CONVERT_TO_DTO_MINIMAL);;
     }
 
     public List<OpportunityDTO> getOpportunities() {

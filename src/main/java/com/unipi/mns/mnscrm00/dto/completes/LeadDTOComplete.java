@@ -17,7 +17,7 @@ public class LeadDTOComplete extends LeadDTOSimple {
 
     public LeadDTOComplete(String companyAddress, String companyIndustry, String companyName, String contactEmail, String contactMobile, String contactPerson, String contactPhone, String contactPrefix, String contactRole, String id, String status, List<Task> tasks, LocalDateTime created, LocalDateTime modified) {
         super(companyAddress, companyIndustry, companyName, contactEmail, contactMobile, contactPerson, contactPhone, contactPrefix, contactRole, id, status, created, modified);
-        this.tasks = ListConverter.convertEntitiesToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.tasks = ListConverter.convertTasksToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public LeadDTOComplete(){

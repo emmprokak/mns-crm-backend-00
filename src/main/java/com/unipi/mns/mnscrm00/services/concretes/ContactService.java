@@ -66,7 +66,7 @@ public class ContactService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertContactsToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public ContactDTO updateContact(String id, Contact contact) throws DataValidationException {
@@ -99,7 +99,7 @@ public class ContactService implements EntityService {
                     )
             );
         }
-        deleteTrigger.handleReferenceDeletion(contactOptional.get());
+        deleteTrigger.handleContactDelete(contactOptional.get());
         contactRepository.delete(contactOptional.get());
 
         return true;

@@ -13,13 +13,6 @@ import com.unipi.mns.mnscrm00.entities.data.Lead;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
-import com.unipi.mns.mnscrm00.process.discounts.DiscountContext;
-import com.unipi.mns.mnscrm00.process.discounts.DiscountStrategy;
-import com.unipi.mns.mnscrm00.process.discounts.DiscountStrategyFactory;
-import com.unipi.mns.mnscrm00.process.discounts.strategies.IndustryDiscount;
-import com.unipi.mns.mnscrm00.process.discounts.strategies.LoyaltyDiscount;
-import com.unipi.mns.mnscrm00.process.discounts.strategies.RevenueDiscount;
-import com.unipi.mns.mnscrm00.process.lead_conversion.*;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import jakarta.transaction.Transactional;
@@ -45,8 +38,6 @@ public class BusinessProcess {
     private RelationshipMapper relationshipMapper;
     @Autowired
     private OpportunityRepository opportunityRepository;
-    @Autowired
-    private DiscountStrategyFactory discountStrategyFactory;
 
     @Transactional
     public List<EntityDTO> leadConversion(String leadId) {
@@ -64,24 +55,22 @@ public class BusinessProcess {
         }
 
         Lead inputLead = leadOptional.get();
+
         Account acc = new Account();
+        acc = ObjectMapper.mapLeadToAccount(inputLead, acc);
         Contact con = new Contact();
+        con = ObjectMapper.mapLeadToContact(inputLead, con);
         Opportunity opp = new Opportunity();
+        opp = ObjectMapper.mapLeadToOpportunity(inputLead, opp);
 
-        LeadConversionInvoker invoker = new LeadConversionInvoker();
+        relationshipMapper.mapLeadToChildren(acc, con, opp, inputLead);
 
-        invoker.addCommand(new CreateAccountCommand(inputLead, acc));
-        invoker.addCommand(new CreateContactCommand(inputLead, con));
-        invoker.addCommand(new CreateOpportunityCommand(inputLead, opp));
-        invoker.addCommand(new MapLeadToChildrenCommand(inputLead, acc, con, opp, relationshipMapper, accountRepository));
-        invoker.addCommand(new MapLeadConversionChildrenRelationships(acc,
-                con, opp,
-                relationshipMapper,
-                contactRepository,
-                opportunityRepository)
-        );
+        acc = accountRepository.save(acc);
 
-        invoker.executeCommands();
+        relationshipMapper.mapLeadConversionChildrenRelationships(acc, con, opp);
+
+        contactRepository.save(con);
+        opportunityRepository.save(opp);
 
         return Arrays.asList(acc.toDTOSimple(), con.toDTOSimple(), opp.toDTOSimple());
     }
@@ -100,11 +89,17 @@ public class BusinessProcess {
         }
 
         Account account = accountOptional.get();
-        DiscountContext discountContext = new DiscountContext();
-        DiscountStrategy selectedDiscountStrategy = discountStrategyFactory.getStrategy(account);
 
-        discountContext.setStrategy(selectedDiscountStrategy);
-        double discountPercentage = discountContext.executeStrategy(accountOptional.get());
+        double discountPercentage = 0.0;
+
+        if (StringUtil.stringsAreEqual(account.getIndustry(), "IT") ||
+                StringUtil.stringsAreEqual(account.getIndustry(), "Insurance")) {
+            discountPercentage = 0.04;
+        } else if (account.getRevenue() < 200_000) {
+            discountPercentage = 0.05;
+        } else {
+            discountPercentage = 0.03;
+        }
 
         return new ProcessOutputDTO(
                 "totalAmount",

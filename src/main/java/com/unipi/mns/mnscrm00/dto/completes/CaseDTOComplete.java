@@ -21,7 +21,7 @@ public class CaseDTOComplete extends CaseDTOSimple {
 
     public CaseDTOComplete(String category, LocalDateTime created, String id, LocalDateTime modified, String reason, Account account, Contact contact, String severity, String source, String status, String title, Date createdDate, Date closedDate, List<VoiceCall> calls) {
         super(category, created, id, modified, reason, account, contact, severity, source, status, title, createdDate, closedDate);
-        this.calls = ListConverter.convertEntitiesToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.calls = ListConverter.convertVoiceCallsToDTOList(calls, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public CaseDTOComplete() {}

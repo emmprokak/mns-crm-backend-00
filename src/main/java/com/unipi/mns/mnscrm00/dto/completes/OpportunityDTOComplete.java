@@ -16,7 +16,7 @@ public class OpportunityDTOComplete extends OpportunityDTOSimple {
 
     public OpportunityDTOComplete(String comments, String description, double expectedRevenue, String id, String relatedAccountId, String status, String title, String type, Account account, LocalDateTime created, LocalDateTime modified, List<Task> tasks) {
         super(comments, description, expectedRevenue, id, relatedAccountId, status, title, type, account, created, modified);
-        this.tasks = ListConverter.convertEntitiesToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        this.tasks = ListConverter.convertTasksToDTOList(tasks, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public OpportunityDTOComplete(){

@@ -66,7 +66,7 @@ public class OpportunityService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertOpportunitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public OpportunityDTO updateOpportunity(String id, Opportunity opportunity) throws DataValidationException {
@@ -101,7 +101,7 @@ public class OpportunityService implements EntityService {
             );
         }
 
-        deleteTrigger.handleReferenceDeletion(opptyOptional.get());
+        deleteTrigger.handleOpportunityDelete(opptyOptional.get());
         opportunityRepository.delete(opptyOptional.get());
 
         return true;

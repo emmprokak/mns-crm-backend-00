@@ -5,9 +5,7 @@ import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dal.LeadRepository;
 import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
-import com.unipi.mns.mnscrm00.entities.data.Account;
-import com.unipi.mns.mnscrm00.entities.data.Contact;
-import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.utilities.error.ErrorMessageUtility;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +20,50 @@ import java.util.Optional;
 @Component
 public class DeleteTrigger {
 
-    private final Map<Class<?>, DeletionHandler<?>> handlers;
+   @Autowired
+   DeleteTriggerHelper deleteTriggerHelper;
 
-    @Autowired
-    public DeleteTrigger(Map<Class<?>, DeletionHandler<?>> handlers) {
-        this.handlers = handlers;
-    }
+   public Account handleAccountDelete(Account account){
+      account = deleteTriggerHelper.handleAccountParentReferences(account);
+      account = deleteTriggerHelper.handleAccountChildrenReferences(account);
+      return account;
+   }
 
-    @SuppressWarnings("unchecked")
-    public <T> void handleReferenceDeletion(T entity) {
-        DeletionHandler<T> handler = (DeletionHandler<T>) handlers.get(entity.getClass());
-        if (handler != null) {
-            handler.delete(entity);
-        } else {
-            throw new IllegalArgumentException(
-                    "No handler found for Entity: " + entity.getClass().getName()
-            );
-        }
-    }
+   public Case handleCaseDelete(Case caseEntry){
+      caseEntry = deleteTriggerHelper.handleCaseParentReferences(caseEntry);
+      caseEntry = deleteTriggerHelper.handleCaseChildrenReferences(caseEntry);
+      return caseEntry;
+   }
+
+   public Contact handleContactDelete(Contact contact){
+      contact = deleteTriggerHelper.handleContactParentReferences(contact);
+      contact = deleteTriggerHelper.handleContactChildrenReferences(contact);
+      return contact;
+   }
+
+   public Task handleTaskDelete(Task task){
+      task = deleteTriggerHelper.handleTaskParentReferences(task);
+      task = deleteTriggerHelper.handleTaskChildrenReferences(task);
+      return task;
+   }
+
+   public Lead handleLeadDelete(Lead lead){
+      lead = deleteTriggerHelper.handleLeadParentReferences(lead);
+      lead = deleteTriggerHelper.handleLeadChildrenReferences(lead);
+      return lead;
+   }
+
+   public Opportunity handleOpportunityDelete(Opportunity opportunity){
+      opportunity = deleteTriggerHelper.handleOpportunityParentReferences(opportunity);
+      opportunity = deleteTriggerHelper.handleOpportunityChildrenReferences(opportunity);
+      return opportunity;
+   }
+
+   public VoiceCall handleVoiceCallDelete(VoiceCall voiceCall){
+      voiceCall = deleteTriggerHelper.handleVoiceCallParentReferences(voiceCall);
+      voiceCall = deleteTriggerHelper.handleVoiceCallChildrenReferences(voiceCall);
+      return voiceCall;
+   }
+
+
 }

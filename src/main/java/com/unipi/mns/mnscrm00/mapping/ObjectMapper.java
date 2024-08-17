@@ -1,6 +1,5 @@
 package com.unipi.mns.mnscrm00.mapping;
 
-import com.unipi.mns.mnscrm00.entities.builders.*;
 import com.unipi.mns.mnscrm00.entities.data.*;
 import com.unipi.mns.mnscrm00.utilities.strings.StringUtil;
 
@@ -13,148 +12,164 @@ import java.util.List;
 public class ObjectMapper {
 
     public static Account mapAccountFields(Account source, Account target){
-        return new AccountBuilder(target)
-                .setActive(source.isActive())
-                .setBillingAddress(source.getBillingAddress())
-                .setClientRating(source.getClientRating())
-                .setCompanyName(source.getCompanyName())
-                .setDescription(source.getDescription())
-                .setIndustry(source.getIndustry())
-                .setRevenue(source.getRevenue())
-                .setLeadId(source.getRelatedLeadId())
-                .setVat(source.getVat())
-                .setWebsite(source.getWebsite())
-                .setType(source.getType())
-                .build();
+        Account result = target;
+
+        result.setActive(source.isActive());
+        result.setBillingAddress(source.getBillingAddress());
+        result.setClientRating(source.getClientRating());
+        result.setCompanyName(source.getCompanyName());
+        result.setDescription(source.getDescription());
+        result.setIndustry(source.getIndustry());
+        result.setRelatedLead(source.getRelatedLead());
+        result.setRevenue(source.getRevenue());
+        result.setVat(source.getVat());
+        result.setWebsite(source.getWebsite());
+        result.setType(source.getType());
+
+        return result;
     }
 
     public static Contact mapContactFields(Contact source, Contact target){
-        return new ContactBuilder(target)
-            .setBirthdate(source.getBirthdate())
-            .setActive(source.isActive())
-            .setAccount(source.getAccount())
-            .setEmail(source.getEmail())
-            .setFirstName(source.getFirstName())
-            .setLastName(source.getLastName())
-            .setPhone(source.getPhone())
-            .setDepartment(source.getDepartment())
-            .setPrefix(source.getPrefix())
-            .setMobile(source.getMobile())
-            .setRole(source.getRole())
-            .build();
+        Contact result = target;
+
+        if(source.getBirthdate() != null){
+            result.setBirthdate(source.getBirthdate());
+        }
+
+        result.setActive(source.isActive());
+        result.setAccount(source.getAccount());
+        result.setEmail(source.getEmail());
+        result.setFirstName(source.getFirstName());
+        result.setLastName(source.getLastName());
+        result.setPhone(source.getPhone());
+        result.setDepartment(source.getDepartment());
+        result.setPrefix(source.getPrefix());
+        result.setMobile(source.getMobile());
+        result.setRole(source.getRole());
+
+        return result;
     }
 
 
     public static Lead mapLeadFields(Lead source, Lead target){
-        return new LeadBuilder(target)
-            .setCompanyAddress(source.getCompanyAddress())
-            .setCompanyIndustry(source.getCompanyIndustry())
-            .setCompanyName(source.getCompanyName())
-            .setContactEmail(source.getContactEmail())
-            .setContactMobile(source.getContactMobile())
-            .setContactPhone(source.getContactPhone())
-            .setContactRole(source.getContactRole())
-            .setContactPrefix(source.getContactPrefix())
-            .setStatus(source.getStatus())
-            .setContactPerson(source.getContactPerson())
-            .build();
+        Lead result = target;
+
+        result.setCompanyAddress(source.getCompanyAddress());
+        result.setCompanyIndustry(source.getCompanyIndustry());
+        result.setCompanyName(source.getCompanyName());
+        result.setContactEmail(source.getContactEmail());
+        result.setContactMobile(source.getContactMobile());
+        result.setContactPhone(source.getContactPhone());
+        result.setContactRole(source.getContactRole());
+        result.setContactPrefix(source.getContactPrefix());
+        result.setStatus(source.getStatus());
+        result.setContactPerson(source.getContactPerson());
+
+        return result;
     }
 
     public static Opportunity mapOpportunityFields(Opportunity source, Opportunity target){
-        return new OpportunityBuilder(target)
-            .setStatus(source.getStatus())
-            .setTitle(source.getTitle())
-            .setExpectedRevenue(source.getExpectedRevenue())
-            .setComments(source.getComments())
-            .setType(source.getType())
-            .setDescription(source.getDescription())
-            .build();
+        Opportunity result = target;
+
+        result.setStatus(source.getStatus());
+        result.setTitle(source.getTitle());
+        result.setExpectedRevenue(source.getExpectedRevenue());
+        result.setComments(source.getComments());
+        result.setType(source.getType());
+        result.setDescription(source.getDescription());
+
+        return result;
     }
 
     public static Task mapTaskFields(Task source, Task target){
-        return new TaskBuilder(target)
-            .setStatus(source.getStatus())
-            .setDueDate(source.getDueDate())
-            .setName(source.getName())
-            .setReason(source.getReason())
-            .setStatus(source.getStatus())
-            .setType(source.getType())
-            .build();
+        Task result = target;
+
+        result.setStatus(source.getStatus());
+        result.setDueDate(source.getDueDate());
+        result.setName(source.getName());
+        result.setReason(source.getReason());
+        result.setStatus(source.getStatus());
+        result.setType(source.getType());
+
+        return result;
     }
 
     public static Case mapCaseFields(Case source, Case target, Boolean isInsert){
-        CaseBuilder caseBuilder = new CaseBuilder(target);
+        Case result = target;
 
-        String previousCaseStatus = target.getStatus();
-
-        caseBuilder.setStatus(source.getStatus())
-            .setCategory(source.getCategory())
-            .setReason(source.getReason())
-            .setSeverity(source.getSeverity())
-            .setSource(source.getSource())
-            .setTitle(source.getTitle());
+        result.setCategory(source.getCategory());
+        result.setReason(source.getReason());
+        result.setStatus(source.getStatus());
+        result.setSeverity(source.getSeverity());
+        result.setSource(source.getSource());
+        result.setTitle(source.getTitle());
 
         if(isInsert){
-            caseBuilder.setCreationDate(Date.valueOf(LocalDate.now().plusDays(1)));
+            result.setCreationDate(Date.valueOf(LocalDate.now()));
         }
 
         if(!isInsert &&
                 StringUtil.stringsAreEqual(source.getStatus(), "Closed") &&
-                !StringUtil.stringsAreEqual(previousCaseStatus, "Closed")){
-            caseBuilder.setClosedDate(Date.valueOf(LocalDate.now()));
+                !StringUtil.stringsAreEqual(target.getStatus(), "Closed")){
+            result.setClosedDate(Date.valueOf(LocalDate.now()));
         }
 
-        return caseBuilder.build();
-    }
-
-    public static VoiceCall mapVoiceCallFields (VoiceCall source, VoiceCall target){
-        return new VoiceCallBuilder(target)
-                .setAgentName(source.getAgentName())
-                .setCallDate(source.getCallDate())
-                .setDuration(source.getDuration())
-                .setCustomerPhone(source.getCustomerPhone())
-                .setTitle(source.getTitle())
-                .build();
+        return result;
     }
 
     public static Account mapLeadToAccount(Lead lead, Account account){
-        return new AccountBuilder(account)
-            .setCompanyName(lead.getCompanyName())
-            .setBillingAddress(lead.getCompanyAddress())
-            .setIndustry(lead.getCompanyIndustry())
-            .setActive(true)
-            .build();
+        Account result = account;
+
+        result.setCompanyName(lead.getCompanyName());
+        result.setBillingAddress(lead.getCompanyAddress());
+        result.setIndustry(lead.getCompanyIndustry());
+        result.setActive(true);
+
+        return result;
     }
 
     public static Contact mapLeadToContact(Lead lead, Contact contact){
-        ContactBuilder contactBuilder = new ContactBuilder(contact);
+        Contact result = contact;
 
         List<String> nameComponents = Arrays.asList(lead.getContactPerson().split(" "));
         if(nameComponents.size() > 1){
-            contactBuilder.setFirstName(nameComponents.get(0));
-            contactBuilder.setLastName(nameComponents.get(1));
+            result.setFirstName(nameComponents.get(0));
+            result.setLastName(nameComponents.get(1));
         }else if(nameComponents.size() == 1){
-            contactBuilder.setFirstName(nameComponents.get(0));
-            contactBuilder.setLastName(nameComponents.get(0));
+            result.setFirstName(nameComponents.get(0));
+            result.setLastName(nameComponents.get(0));
         }else{
-            contactBuilder.setFirstName("NONAME");
-            contactBuilder.setFirstName("NONAME");
+            result.setFirstName("NONAME");
+            result.setFirstName("NONAME");
         }
 
-        return contactBuilder
-            .setRole(lead.getContactRole())
-            .setMobile(lead.getContactMobile())
-            .setPhone(lead.getContactPhone())
-            .setEmail(lead.getContactEmail())
-            .setPrefix(lead.getContactPrefix())
-            .setActive(true)
-            .build();
+        result.setRole(lead.getContactRole());
+        result.setMobile(lead.getContactMobile());
+        result.setPhone(lead.getContactPhone());
+        result.setEmail(lead.getContactEmail());
+        result.setPrefix(lead.getContactPrefix());
+        result.setActive(true);
+
+        return result;
     }
 
     public static Opportunity mapLeadToOpportunity(Lead lead, Opportunity opportunity){
-        return new OpportunityBuilder(opportunity)
-                .setStatus("New")
-                .setTitle(lead.getCompanyName() + " " + "Opportunity")
-                .build();
+        Opportunity result = opportunity;
+
+        result.setStatus("New");
+        result.setTitle(lead.getCompanyName() + " " + "Opportunity");
+        return result;
+    }
+
+    public static VoiceCall mapVoiceCallFields (VoiceCall source, VoiceCall target){
+        VoiceCall result = target;
+
+        target.setAgentName(source.getAgentName());
+        target.setCallDate(source.getCallDate());
+        target.setDuration(source.getDuration());
+        target.setCustomerPhone(source.getCustomerPhone());
+        target.setTitle(source.getTitle());
+
+        return result;
     }
 }

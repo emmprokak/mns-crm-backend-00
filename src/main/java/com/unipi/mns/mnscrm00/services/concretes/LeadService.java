@@ -64,7 +64,7 @@ public class LeadService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertEntitiesToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertLeadsToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
     public LeadDTO updateLead(String id, Lead lead) throws DataValidationException {
@@ -100,7 +100,7 @@ public class LeadService implements EntityService {
         }
 
 
-        deleteTrigger.handleReferenceDeletion(leadOptional.get());
+        deleteTrigger.handleLeadDelete(leadOptional.get());
         leadRepository.delete(leadOptional.get());
 
         return true;
