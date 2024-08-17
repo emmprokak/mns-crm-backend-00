@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.constants;
 
 public class Constants {
 
+    // uninstantiable
     private Constants(){
 
     }

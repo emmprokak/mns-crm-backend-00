@@ -6,6 +6,7 @@ import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.ContactDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
@@ -51,7 +52,7 @@ public class ContactService implements EntityService {
         return contactOptional.get().toDTOSimple();
     }
 
-    public ContactDTO insertContact(Contact contact){
+    public ContactDTO insertContact(Contact contact) throws DataValidationException {
         Contact contactToInsert = new Contact();
         contactToInsert = insertUpdateTrigger.handleContactEntry(contact, contactToInsert, true);
 
@@ -65,10 +66,10 @@ public class ContactService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertContactsToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(contactList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public ContactDTO updateContact(String id, Contact contact){
+    public ContactDTO updateContact(String id, Contact contact) throws DataValidationException {
         Optional<Contact> contactOptional = contactRepository.findById(id);
 
         if(!contactOptional.isPresent()){
@@ -83,7 +84,7 @@ public class ContactService implements EntityService {
 
         Contact contactToUpdate = contactOptional.get();
         contactToUpdate = insertUpdateTrigger.handleContactEntry(contact, contactToUpdate, false);
-        return contactRepository.save(contactToUpdate).toDTOSimple();
+        return contactRepository.save(contactToUpdate).toDTOComplete();
     }
 
     public boolean deleteContactById(String id){

@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.TaskRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.TaskDTO;
 import com.unipi.mns.mnscrm00.entities.data.Task;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
 import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
@@ -49,7 +50,7 @@ public class TaskService {
         return taskOptional.get().toDTOSimple();
     }
 
-    public TaskDTO insertTask(Task task){
+    public TaskDTO insertTask(Task task) throws DataValidationException {
         Task taskToInsert = new Task();
         taskToInsert = insertUpdateTrigger.handleTaskEntry(task, taskToInsert, true);
 
@@ -63,10 +64,10 @@ public class TaskService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertTasksToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public TaskDTO updateTask(String id, Task task){
+    public TaskDTO updateTask(String id, Task task) throws DataValidationException {
         Optional<Task> taskOptional = taskRepository.findById(id);
 
         if(!taskOptional.isPresent()){
@@ -82,7 +83,7 @@ public class TaskService {
         Task taskToUpdate = taskOptional.get();
         taskToUpdate = insertUpdateTrigger.handleTaskEntry(task, taskToUpdate, false);
 
-        return taskRepository.save(taskToUpdate).toDTOSimple();
+        return taskRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteTaskById(String id){

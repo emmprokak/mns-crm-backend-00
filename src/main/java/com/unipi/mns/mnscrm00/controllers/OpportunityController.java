@@ -3,6 +3,7 @@ package com.unipi.mns.mnscrm00.controllers;
 import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.ContactService;
 import com.unipi.mns.mnscrm00.services.concretes.OpportunityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ public class OpportunityController {
     @Autowired
     private OpportunityService opportunityService;
 
-
     @GetMapping("/{id}")
     public OpportunityDTO getOpportunity(@PathVariable String id){
         return opportunityService.getOpportunityById(id, false);
@@ -29,7 +29,7 @@ public class OpportunityController {
     }
 
     @PostMapping("/new")
-    public OpportunityDTO createOpportunity(@RequestBody Opportunity opportunity){
+    public OpportunityDTO createOpportunity(@RequestBody Opportunity opportunity) throws DataValidationException {
         return opportunityService.insertOpportunity(opportunity);
     }
 
@@ -39,7 +39,7 @@ public class OpportunityController {
     }
 
     @PutMapping("/{id}")
-    public OpportunityDTO updateOpportunity(@PathVariable String id, @RequestBody Opportunity opportunity){
+    public OpportunityDTO updateOpportunity(@PathVariable String id, @RequestBody Opportunity opportunity) throws DataValidationException {
         return opportunityService.updateOpportunity(id, opportunity);
     }
 

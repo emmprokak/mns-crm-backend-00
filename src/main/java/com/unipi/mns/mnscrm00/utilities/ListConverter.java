@@ -11,144 +11,27 @@ import java.util.List;
 
 public class ListConverter {
 
-    public static List<AccountDTO> convertAccountsToDTOList(List<Account> accounts, int conversionType) {
-        List<AccountDTO> dtos = new ArrayList<>();
+    public static <E extends Sendable<D>, D> List<D> convertEntitiesToDTOList(List<E> entities, int conversionType) {
+        List<D> dtoList = new ArrayList<>();
 
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                accounts.forEach(acc -> dtos.add(acc.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                accounts.forEach(acc -> dtos.add(acc.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                accounts.forEach(acc -> dtos.add(acc.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
+        for (E entity : entities) {
+            D dto;
+            switch (conversionType) {
+                case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
+                    dto = entity.toDTOMinimal();
+                    break;
+                case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
+                    dto = entity.toDTOSimple();
+                    break;
+                case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
+                    dto = entity.toDTOComplete();
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid conversion type");
+            }
+            dtoList.add(dto);
         }
 
-        return dtos;
+        return dtoList;
     }
-
-    public static List<ContactDTO> convertContactsToDTOList(List<Contact> contacts, int conversionType){
-        List<ContactDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                contacts.forEach(con -> dtos.add(con.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                contacts.forEach(con -> dtos.add(con.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                contacts.forEach(con -> dtos.add(con.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
-    public static List<LeadDTO> convertLeadsToDTOList(List<Lead> leads, int conversionType){
-        List<LeadDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                leads.forEach(lead -> dtos.add(lead.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                leads.forEach(lead -> dtos.add(lead.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                leads.forEach(lead -> dtos.add(lead.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
-    public static List<OpportunityDTO> convertOpportunitiesToDTOList(List<Opportunity> opportunities, int conversionType){
-        List<OpportunityDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                opportunities.forEach(opp -> dtos.add(opp.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                opportunities.forEach(opp -> dtos.add(opp.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                opportunities.forEach(opp -> dtos.add(opp.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
-    public static List<TaskDTO> convertTasksToDTOList(List<Task> tasks, int conversionType){
-        List<TaskDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                tasks.forEach(task -> dtos.add(task.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                tasks.forEach(task -> dtos.add(task.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                tasks.forEach(task -> dtos.add(task.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
-    public static List<CaseDTO> convertCasesToDTOList(List<Case> cases, int conversionType){
-        List<CaseDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                cases.forEach(c -> dtos.add(c.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                cases.forEach(c -> dtos.add(c.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                cases.forEach(c -> dtos.add(c.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
-    public static List<VoiceCallDTO> convertVoiceCallsToDTOList(List<VoiceCall> voiceCalls, int conversionType){
-        List<VoiceCallDTO> dtos = new ArrayList<>();
-
-        switch(conversionType){
-            case Constants.DTO.CONVERT_TO_DTO_MINIMAL:
-                voiceCalls.forEach(vc -> dtos.add(vc.toDTOMinimal()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_SIMPLE:
-                voiceCalls.forEach(vc -> dtos.add(vc.toDTOSimple()));
-                break;
-            case Constants.DTO.CONVERT_TO_DTO_COMPLETE:
-                voiceCalls.forEach(vc -> dtos.add(vc.toDTOComplete()));
-                break;
-            default:
-                //throw new ListConversionException("Invalid Mapping for Converting to List to DTO List");
-        }
-
-        return dtos;
-    }
-
 }

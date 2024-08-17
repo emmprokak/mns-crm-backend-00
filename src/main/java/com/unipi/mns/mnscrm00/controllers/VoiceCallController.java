@@ -2,6 +2,7 @@ package com.unipi.mns.mnscrm00.controllers;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.VoiceCallDTO;
 import com.unipi.mns.mnscrm00.entities.data.VoiceCall;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.services.concretes.VoiceCallService;
 import com.unipi.mns.mnscrm00.services.concretes.VoiceCallService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class VoiceCallController {
     }
 
     @PostMapping("/new")
-    public VoiceCallDTO createVoiceCall(@RequestBody VoiceCall voiceCall){
+    public VoiceCallDTO createVoiceCall(@RequestBody VoiceCall voiceCall) throws DataValidationException {
         return voiceCallService.insertVoiceCall(voiceCall);
     }
 
@@ -37,7 +38,7 @@ public class VoiceCallController {
     }
 
     @PutMapping("/{id}")
-    public VoiceCallDTO updateVoiceCall(@PathVariable String id, @RequestBody VoiceCall voiceCall){
+    public VoiceCallDTO updateVoiceCall(@PathVariable String id, @RequestBody VoiceCall voiceCall) throws DataValidationException {
         return voiceCallService.updateVoiceCall(id, voiceCall);
     }
 

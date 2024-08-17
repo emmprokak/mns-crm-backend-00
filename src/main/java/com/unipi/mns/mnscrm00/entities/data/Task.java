@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.TaskDTO;
 import com.unipi.mns.mnscrm00.dto.completes.TaskDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.TaskDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.TaskDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="Task_ent")
-public class Task implements Sendable<TaskDTO>, DataEntity {
+public class Task implements Sendable<TaskDTO>, DataEntity, ChildEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -34,10 +35,6 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
 
     @Column(name = "opportunity_id_txt")
     private String relatedOpportunityId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User responsible;
 
     @Column(name = "name")
     private String name;
@@ -62,20 +59,19 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
     private LocalDateTime modified;
 
 
-    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type) {
+    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, String status, String type) {
         this.dueDate = dueDate;
         this.id = id;
         this.name = name;
         this.reason = reason;
         this.relatedLead = relatedLead;
         this.relatedOpportunity = relatedOpportunity;
-        this.responsible = responsible;
         this.status = status;
         this.type = type;
     }
 
-    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, User responsible, String status, String type, String relatedLeadId, String relatedOpportunityId) {
-        this(dueDate, id, name, reason, relatedLead, relatedOpportunity, responsible, status, type);
+    public Task(Date dueDate, String id, String name, String reason, Lead relatedLead, Opportunity relatedOpportunity, String status, String type, String relatedLeadId, String relatedOpportunityId) {
+        this(dueDate, id, name, reason, relatedLead, relatedOpportunity, status, type);
         this.relatedLeadId = relatedLeadId;
         this.relatedOpportunityId = relatedOpportunityId;
     }
@@ -96,6 +92,53 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
     @Override
     public TaskDTO toDTOMinimal() {
         return new TaskDTOMinimal(dueDate, id, name, reason, status, type, relatedLead, relatedOpportunity, created, modified);
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Lead.class){
+            return relatedLeadId;
+        }
+
+        if(entityType == Opportunity.class){
+            return relatedOpportunityId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Lead.class){
+            return (P) relatedLead;
+        }
+
+        if(entityType == Opportunity.class){
+            return (P) relatedOpportunity;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Lead.class){
+            this.relatedLead = (Lead) parent;
+            if(parent != null){
+                this.relatedLeadId =  ((Lead) parent).getId();
+            }else{
+                this.relatedLeadId = null;
+            }
+        }
+
+        if(entityType == Opportunity.class){
+            this.relatedOpportunity = (Opportunity) parent;
+            if(parent != null){
+                this.relatedOpportunityId =  ((Opportunity) parent).getId();
+            }else{
+                this.relatedOpportunityId = null;
+            }
+        }
     }
 
     public String getRelatedLeadId() {
@@ -160,14 +203,6 @@ public class Task implements Sendable<TaskDTO>, DataEntity {
 
     public void setRelatedOpportunity(Opportunity relatedOpportunity) {
         this.relatedOpportunity = relatedOpportunity;
-    }
-
-    public User getResponsible() {
-        return responsible;
-    }
-
-    public void setResponsible(User responsible) {
-        this.responsible = responsible;
     }
 
     public String getStatus() {

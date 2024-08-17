@@ -64,8 +64,6 @@ public class OpportunityDeletionHandler implements DeletionHandler<Opportunity> 
             taskRepository.save(task);
         }
 
-        //TODO: add note when time comes
-
         return opportunity;
     }
 }

@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.VoiceCallDTO;
 import com.unipi.mns.mnscrm00.dto.completes.VoiceCallDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.VoiceCallDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.VoiceCallDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="Voice_Call_ent")
-public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity {
+public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity, ChildEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -83,6 +84,53 @@ public class VoiceCall implements Sendable<VoiceCallDTO>, DataEntity {
     @Override
     public VoiceCallDTO toDTOMinimal() {
         return new VoiceCallDTOMinimal(agentName, callDate, customerPhone, duration, id, relatedAccount, relatedCase, title, created, modified);
+    }
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Account.class){
+            return relatedAccountId;
+        }
+
+        if(entityType == Case.class){
+            return relatedCaseId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Account.class){
+            return (P) relatedAccount;
+        }
+
+        if(entityType == Case.class){
+            return (P) relatedCase;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Account.class){
+            this.relatedAccount = (Account) parent;
+            if(parent != null){
+                this.relatedAccountId = ((Account) parent).getId();
+            }else{
+                this.relatedAccountId = null;
+            }
+        }
+
+        if(entityType == Case.class){
+            this.relatedCase = (Case) parent;
+            if(parent != null){
+                this.relatedCaseId = ((Case) parent).getId();
+            }else{
+                this.relatedCaseId = null;
+            }
+        }
     }
 
     public String getRelatedAccountId() {

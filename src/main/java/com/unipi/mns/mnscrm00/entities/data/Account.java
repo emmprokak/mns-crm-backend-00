@@ -6,7 +6,9 @@ import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.dto.completes.AccountDTOComplete;
 import com.unipi.mns.mnscrm00.dto.minimals.AccountDTOMinimal;
 import com.unipi.mns.mnscrm00.dto.simples.AccountDTOSimple;
+import com.unipi.mns.mnscrm00.entities.abstracts.ChildEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.DataEntity;
+import com.unipi.mns.mnscrm00.entities.abstracts.ParentEntity;
 import com.unipi.mns.mnscrm00.entities.abstracts.Sendable;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +23,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="Account_ent")
-public class Account implements Sendable<AccountDTO>, DataEntity {
+public class Account implements Sendable<AccountDTO>, DataEntity, ParentEntity, ChildEntity {
     @Id
     @UuidGenerator
     private String id;
@@ -48,10 +50,10 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     List<Contact> contacts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
-    List<Case> cases;
+    List<Case> cases = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
-    List<VoiceCall> calls;
+    List<VoiceCall> calls = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = false)
     List<Opportunity> opportunities = new ArrayList<>();
@@ -131,6 +133,126 @@ public class Account implements Sendable<AccountDTO>, DataEntity {
     @Override
     public AccountDTO toDTOMinimal() {
         return new AccountDTOMinimal(billingAddress, clientRating, companyName, description, id, industry, isActive, parent, relatedLead, revenue, type, vat, website, created, modified);
+    }
+
+    @Override
+    public <C> List<C> getChildrenEntities(Class<C> childType) {
+        // switch statement not supported for typeKey as of Java 21
+        if (childType == Account.class) {
+            return (List<C>) children;
+        }
+
+        if (childType == Contact.class) {
+            return (List<C>) contacts;
+        }
+
+        if (childType == Case.class) {
+            return (List<C>) cases;
+        }
+
+        if (childType == VoiceCall.class) {
+            return (List<C>) calls;
+        }
+
+        if (childType == Opportunity.class) {
+            return (List<C>) opportunities;
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void removeChild(Class childType, Object child) {
+        if (childType == Account.class) {
+            children.remove((Account) child);
+        }
+
+        if (childType == Contact.class) {
+            contacts.remove((Contact) child);
+        }
+
+        if (childType == Case.class) {
+            cases.remove((Case) child);
+        }
+
+        if (childType == VoiceCall.class) {
+            calls.remove((VoiceCall) child);
+        }
+
+        if (childType == Opportunity.class) {
+            opportunities.remove((Opportunity) child);
+        }
+    }
+
+    @Override
+    public void addChild(Class childType, Object child) {
+        if (childType == Account.class) {
+            children.add((Account) child);
+        }
+
+        if (childType == Contact.class) {
+            contacts.add((Contact) child);
+        }
+
+        if (childType == Case.class) {
+            cases.add((Case) child);
+        }
+
+        if (childType == VoiceCall.class) {
+            calls.add((VoiceCall) child);
+        }
+
+        if (childType == Opportunity.class) {
+            opportunities.add((Opportunity) child);
+        }
+    }
+
+
+    @Override
+    public <P> String getParentId(Class<P> entityType) {
+        if(entityType == Account.class){
+            return parentId;
+        }
+
+        if(entityType == Lead.class){
+            return relatedLeadId;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> P getParent(Class<P> entityType) {
+        if(entityType == Account.class){
+            return (P) parent;
+        }
+
+        if(entityType == Lead.class){
+            return (P) relatedLead;
+        }
+
+        return null;
+    }
+
+    @Override
+    public <P> void setParent(Class<P> entityType, P parent) {
+        if(entityType == Account.class){
+            this.parent = (Account) parent;
+            if(parent != null){
+                this.parentId = ((Account) parent).getId();
+            }else{
+                this.parentId = null;
+            }
+        }
+
+        if(entityType == Lead.class){
+            this.relatedLead = (Lead) parent;
+            if(parent != null){
+                this.relatedLeadId = ((Lead) parent).getId();
+            }else{
+                this.relatedLeadId = null;
+            }
+        }
     }
 
     public List<Opportunity> getOpportunities() {

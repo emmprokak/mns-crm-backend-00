@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.VoiceCallRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.VoiceCallDTO;
 import com.unipi.mns.mnscrm00.entities.data.VoiceCall;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
 import com.unipi.mns.mnscrm00.triggers.insert_update.InsertUpdateTrigger;
@@ -47,7 +48,7 @@ public class VoiceCallService {
         return voiceCallOptional.get().toDTOSimple();
     }
 
-    public VoiceCallDTO insertVoiceCall(VoiceCall voiceCall){
+    public VoiceCallDTO insertVoiceCall(VoiceCall voiceCall) throws DataValidationException {
         VoiceCall voiceCallToInsert = new VoiceCall();
         voiceCallToInsert = insertUpdateTrigger.handleVoiceCallEntry(voiceCall, voiceCallToInsert, true);
 
@@ -55,16 +56,16 @@ public class VoiceCallService {
     }
 
     public List<VoiceCallDTO> getAllVoiceCalls(){
-        List<VoiceCall> taskList = voiceCallRepository.findAll();
+        List<VoiceCall> voiceCallList = voiceCallRepository.findAll();
 
-        if(taskList.size() <= 0){
+        if(voiceCallList.size() <= 0){
             return new ArrayList<>();
         }
 
-        return ListConverter.convertVoiceCallsToDTOList(taskList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(voiceCallList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall){
+    public VoiceCallDTO updateVoiceCall(String id, VoiceCall voiceCall) throws DataValidationException {
         Optional<VoiceCall> voiceCallOptional = voiceCallRepository.findById(id);
 
         if(!voiceCallOptional.isPresent()){
@@ -80,7 +81,7 @@ public class VoiceCallService {
         VoiceCall taskToUpdate = voiceCallOptional.get();
         taskToUpdate = insertUpdateTrigger.handleVoiceCallEntry(voiceCall, taskToUpdate, false);
 
-        return voiceCallRepository.save(taskToUpdate).toDTOSimple();
+        return voiceCallRepository.save(taskToUpdate).toDTOComplete();
     }
 
     public boolean deleteVoiceCallById(String id){

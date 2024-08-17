@@ -2,9 +2,11 @@ package com.unipi.mns.mnscrm00.triggers.delete.entity_deletion;
 
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
+import com.unipi.mns.mnscrm00.dal.CaseRepository;
 import com.unipi.mns.mnscrm00.dal.ContactRepository;
 import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
+import com.unipi.mns.mnscrm00.entities.data.Case;
 import com.unipi.mns.mnscrm00.entities.data.Contact;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
 import com.unipi.mns.mnscrm00.triggers.delete.DeletionHandler;
@@ -23,12 +25,12 @@ public class AccountDeletionHandler implements DeletionHandler<Account> {
 
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private OpportunityRepository opportunityRepository;
-
     @Autowired
     private ContactRepository contactRepository;
+    @Autowired
+    private CaseRepository caseRepository;
 
     @Override
     public Account delete(Account account) {
@@ -82,7 +84,12 @@ public class AccountDeletionHandler implements DeletionHandler<Account> {
             opportunityRepository.save(opp);
         }
 
-        // TODO: add cases when time
+        List<Case> caseList = caseRepository.findByRelatedAccountId(account.getId());
+        for(Case c : caseList){
+            c.setRelatedAccount(null);
+            c.setRelatedAccountId(null);
+            caseRepository.save(c);
+        }
 
         return account;
     }

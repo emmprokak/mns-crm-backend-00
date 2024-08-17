@@ -1,6 +1,7 @@
 package com.unipi.mns.mnscrm00.dto.simples;
 
 import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
+import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
 import org.springframework.cglib.core.Local;
@@ -11,7 +12,7 @@ public class AccountDTOSimple extends AccountDTO {
 
     private AccountDTO parent;
 
-    //TODO: add lead DTO
+    private LeadDTO parentLead;
 
     public AccountDTOSimple(){
         super();
@@ -23,6 +24,10 @@ public class AccountDTOSimple extends AccountDTO {
         if(parent != null){
             this.parent = parent.toDTOSimple();
         }
+
+        if(relatedLead != null){
+            this.parentLead = relatedLead.toDTOSimple();
+        }
     }
 
     public AccountDTO getParent() {
@@ -31,5 +36,13 @@ public class AccountDTOSimple extends AccountDTO {
 
     public void setParent(AccountDTO parent) {
         this.parent = parent;
+    }
+
+    public LeadDTO getParentLead() {
+        return parentLead;
+    }
+
+    public void setParentLead(LeadDTO parentLead) {
+        this.parentLead = parentLead;
     }
 }

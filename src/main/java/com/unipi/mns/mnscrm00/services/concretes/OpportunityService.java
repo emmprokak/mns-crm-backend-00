@@ -6,6 +6,7 @@ import com.unipi.mns.mnscrm00.dal.OpportunityRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.OpportunityDTO;
 import com.unipi.mns.mnscrm00.entities.data.Account;
 import com.unipi.mns.mnscrm00.entities.data.Opportunity;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
@@ -51,7 +52,7 @@ public class OpportunityService implements EntityService {
         return opptyOptional.get().toDTOSimple();
     }
 
-    public OpportunityDTO insertOpportunity(Opportunity opportunity){
+    public OpportunityDTO insertOpportunity(Opportunity opportunity) throws DataValidationException {
         Opportunity opptyToInsert = new Opportunity();
         opptyToInsert = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToInsert, true);
 
@@ -65,10 +66,10 @@ public class OpportunityService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertOpportunitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(opptyList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
-    public OpportunityDTO updateOpportunity(String id, Opportunity opportunity){
+    public OpportunityDTO updateOpportunity(String id, Opportunity opportunity) throws DataValidationException {
         Optional<Opportunity> opptyOptional = opportunityRepository.findById(id);
 
         if(!opptyOptional.isPresent()){
@@ -84,7 +85,7 @@ public class OpportunityService implements EntityService {
         Opportunity opptyToUpdate = opptyOptional.get();
         opptyToUpdate = insertUpdateTrigger.handleOpportunityEntry(opportunity, opptyToUpdate, false);
 
-        return opportunityRepository.save(opptyToUpdate).toDTOSimple();
+        return opportunityRepository.save(opptyToUpdate).toDTOComplete();
     }
 
     public boolean deleteOpportunityById(String id){

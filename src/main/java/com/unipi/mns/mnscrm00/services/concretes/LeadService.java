@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.LeadRepository;
 import com.unipi.mns.mnscrm00.dto.abstracts.LeadDTO;
 import com.unipi.mns.mnscrm00.entities.data.Lead;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.ObjectMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
@@ -49,10 +50,9 @@ public class LeadService implements EntityService {
         return leadOptional.get().toDTOSimple();
     }
 
-    public LeadDTO insertLead(Lead lead){
+    public LeadDTO insertLead(Lead lead) throws DataValidationException {
         Lead leadToInsert = new Lead();
-
-        leadToInsert = ObjectMapper.mapLeadFields(lead, leadToInsert);
+        leadToInsert = insertUpdateTrigger.handleLeadEntry(lead, leadToInsert);
 
         return leadRepository.save(leadToInsert).toDTOSimple();
     }
@@ -64,10 +64,10 @@ public class LeadService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertLeadsToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
+        return ListConverter.convertEntitiesToDTOList(leadList, Constants.DTO.CONVERT_TO_DTO_MINIMAL);
     }
 
-    public LeadDTO updateLead(String id, Lead lead){
+    public LeadDTO updateLead(String id, Lead lead) throws DataValidationException {
         Optional<Lead> leadOptional = leadRepository.findById(id);
 
         if(!leadOptional.isPresent()){
@@ -83,7 +83,7 @@ public class LeadService implements EntityService {
         Lead leadToUpdate = leadOptional.get();
         leadToUpdate = insertUpdateTrigger.handleLeadEntry(lead, leadToUpdate);
 
-        return leadRepository.save(leadToUpdate).toDTOSimple();
+        return leadRepository.save(leadToUpdate).toDTOComplete();
     }
 
     public boolean deleteLeadById(String id){

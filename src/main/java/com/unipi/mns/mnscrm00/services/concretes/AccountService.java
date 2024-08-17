@@ -4,6 +4,7 @@ import com.unipi.mns.mnscrm00.dto.abstracts.AccountDTO;
 import com.unipi.mns.mnscrm00.constants.Constants;
 import com.unipi.mns.mnscrm00.dal.AccountRepository;
 import com.unipi.mns.mnscrm00.entities.data.Account;
+import com.unipi.mns.mnscrm00.exceptions.DataValidationException;
 import com.unipi.mns.mnscrm00.mapping.RelationshipMapper;
 import com.unipi.mns.mnscrm00.services.abstracts.EntityService;
 import com.unipi.mns.mnscrm00.triggers.delete.DeleteTrigger;
@@ -55,7 +56,7 @@ public class AccountService implements EntityService {
         return accountOptional.get().toDTOSimple();
     }
 
-    public AccountDTO insertAccount(Account account){
+    public AccountDTO insertAccount(Account account) throws DataValidationException {
         Account acc = new Account();
         acc = insertUpdateTrigger.handleAccountEntry(account, acc);
 
@@ -69,7 +70,7 @@ public class AccountService implements EntityService {
             return new ArrayList<>();
         }
 
-        return ListConverter.convertAccountsToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
+        return ListConverter.convertEntitiesToDTOList(accountList, Constants.DTO.CONVERT_TO_DTO_SIMPLE);
     }
 
     public List<AccountDTO> getAllAccountsWithFilters(int limit, String orderByField, String orderType){
@@ -85,7 +86,7 @@ public class AccountService implements EntityService {
     }
 
 
-    public AccountDTO updateAccount(String id, Account account){
+    public AccountDTO updateAccount(String id, Account account) throws DataValidationException {
         Optional<Account> accountOptional = accountRepository.findById(id);
 
         if(!accountOptional.isPresent()){
@@ -101,7 +102,7 @@ public class AccountService implements EntityService {
         Account accToUpdate = accountOptional.get();
         accToUpdate = insertUpdateTrigger.handleAccountEntry(account, accToUpdate);
 
-        return accountRepository.save(accToUpdate).toDTOSimple();
+        return accountRepository.save(accToUpdate).toDTOComplete();
     }
 
     public boolean deleteAccountById(String id){

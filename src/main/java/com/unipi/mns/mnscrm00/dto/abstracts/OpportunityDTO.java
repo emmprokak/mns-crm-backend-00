@@ -2,6 +2,8 @@ package com.unipi.mns.mnscrm00.dto.abstracts;
 
 import com.unipi.mns.mnscrm00.entities.data.Account;
 
+import java.time.LocalDateTime;
+
 public abstract class OpportunityDTO implements EntityDTO{
 
     private String id;
@@ -12,8 +14,10 @@ public abstract class OpportunityDTO implements EntityDTO{
     private String description;
     private String comments;
     private double expectedRevenue;
+    private LocalDateTime created;
+    private LocalDateTime modified;
 
-    public OpportunityDTO(String comments, String description, double expectedRevenue, String id, String relatedAccountId, String status, String title, String type, Account account) {
+    public OpportunityDTO(String comments, String description, double expectedRevenue, String id, String relatedAccountId, String status, String title, String type, Account account, LocalDateTime created, LocalDateTime modified) {
         this.comments = comments;
         this.description = description;
         this.expectedRevenue = expectedRevenue;
@@ -22,6 +26,8 @@ public abstract class OpportunityDTO implements EntityDTO{
         this.status = status;
         this.title = title;
         this.type = type;
+        this.created = created;
+        this.modified = modified;
 
         if(account != null){
             this.relatedAccountId = account.getId();
@@ -36,6 +42,22 @@ public abstract class OpportunityDTO implements EntityDTO{
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 
     public String getDescription() {

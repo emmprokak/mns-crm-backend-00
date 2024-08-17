@@ -48,8 +48,6 @@ public class LeadDeletionHandler implements DeletionHandler<Lead> {
             taskRepository.save(task);
         }
 
-        //TODO: add note when time comes
-
         return lead;
     }
 }
